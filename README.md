@@ -3,15 +3,11 @@ Team Name: CMOH
 
 Team member: Carlos, Haiyi, Olivia, Matthew
 
-Email: ,, osapp2@uw.edu, chuns4@uw.edu
+Email: cacs@uw.edu,hluo5@uw.edu, osapp2@uw.edu, chuns4@uw.edu
 
 Class: INFO 448 Final Project
 
 Professor: Professor Neward
-
-Canva Presentation: Link
-
-Professor’s slides with project requirements: Link 
 
 App Name: Paws & Claws Reminder 
 
