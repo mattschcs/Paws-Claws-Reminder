@@ -35,7 +35,7 @@ Busy pet owners sometimes struggle to remember essential care tasks like feeding
 
 ## Core User Stories: 
 - As a user, I want create pet profiles so that I can track a specific pet care
-As a user, I want to be able to add tasks that I need to do for my pet with recurring dates and times so that I can make sure I remember to feed my pet on time.
+- As a user, I want to be able to add tasks that I need to do for my pet with recurring dates and times so that I can make sure I remember to feed my pet on time.
 - As a user, I want to update and report tasks with the date and time so that I can keep a detailed record of completed activities and ensure I’m staying on track with my pet’s care routine.
 - As a user, I want to receive text reminders for important tasks so that I never forget to complete essential care activities for my pet.
 - As a user, I want my other family members (or roommates) to be able to access the same account, so we can all see if our pet has been fed and walked that day. I want to avoid feeding our pet two dinners.
