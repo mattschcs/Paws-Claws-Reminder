@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".addTask">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="20dp" >
+
+                <!--Check boxes for the pet it is assigned to-->
+                <CheckBox
+                    android:id="@+id/checkBox4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Pet name" />
+
+                <!--Task Name: text Input-->
+                <EditText
+                    android:id="@+id/task_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="text"
+                    android:hint="Task Name" />
+
+                <!--task Type: dropdown select-->
+                <Spinner
+                    android:id="@+id/task_type_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Task Type"/>
+
+                <!--Additional details: text input-->
+                <EditText
+                    android:id="@+id/additional_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="text"
+                    android:hint="Additional Details" />
+
+
+                <!--Start Date: calendar-->
+                <CalendarView
+                    android:id="@+id/start_calender"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Start Date"/>
+
+                <!--Time: time input?-->
+                <EditText
+                    android:id="@+id/editTextTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="time"
+                    android:hint="Time"/>
+
+                <!--Repeats: dropdown select-->
+                <Spinner
+                    android:id="@+id/repeats_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Repeats"/>
+
+                <!--End Date: calendar-->
+                <CalendarView
+                    android:id="@+id/end_calender"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="End Date"/>
+
+                <!--Add button-->
+                <Button
+                    android:id="@+id/create_task"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Add"
+                    android:layout_marginBottom="150dp"
+                    />
+
+            </LinearLayout>
+        </ScrollView>
+</FrameLayout>

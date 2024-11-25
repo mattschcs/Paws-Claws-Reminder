@@ -4,6 +4,26 @@
     <string name="task">Task</string>
     <string name="reminders">Reminders</string>
     <string name="profile">Profile</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="TaskType">
+        <item>Cleaning</item>
+        <item>Exercise</item>
+        <item>Feed</item>
+        <item>Groom</item>
+        <item>Medicine</item>
+        <item>Play</item>
+        <item>Training</item>
+        <item>Walk</item>
+        <item>Vet</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="TaskRepeats">
+        <item>Daily</item>
+        <item>Weekly</item>
+        <item>Monthly</item>
+        <item>Yearly</item>
+        <item>Never</item>
+    </string-array>
+
 </resources>
