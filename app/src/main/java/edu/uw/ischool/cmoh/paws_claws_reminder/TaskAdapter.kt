@@ -12,7 +12,7 @@ import java.time.LocalDateTime
 
 class TaskAdapter (
     private val tasks: MutableList<Task>,
-    private val onTaskRemoved: (Task) -> Unit
+    private val onTaskSelectionChanged: (Task) -> Unit
 ): RecyclerView.Adapter<TaskAdapter.ReminderViewHolder>() {
 
     class ReminderViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -28,29 +28,20 @@ class TaskAdapter (
     override fun getItemCount() = tasks.size
 
     override fun onBindViewHolder(holder: ReminderViewHolder, position: Int) {
-        val reminder = tasks[position]
-        holder.taskName.text = reminder.name
+        val task = tasks[position]
+        holder.taskName.text = task.name
 
         val currentTime = LocalDateTime.now()
         holder.checkbox.buttonTintList = ColorStateList.valueOf(
-            if (currentTime.isAfter(reminder.endDateTime)) Color.parseColor("#800080")
+            if (currentTime.isAfter(task.endDateTime)) Color.parseColor("#800080")
             else Color.parseColor("#FFD700")
         )
 
         holder.checkbox.setOnCheckedChangeListener(null)
-        holder.checkbox.isChecked = reminder.isChecked
+        holder.checkbox.isChecked = task.isChecked
         holder.checkbox.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                onTaskRemoved(reminder)
-            }
-        }
-    }
-
-    fun onTaskRemoved(task: Task) {
-        val index = tasks.indexOf(task)
-        if (index != -1) {
-            tasks.removeAt(index)
-            notifyItemRemoved(index)
+            task.isChecked = isChecked
+            onTaskSelectionChanged(task)
         }
     }
 

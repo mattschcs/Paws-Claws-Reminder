@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ReminderActivity">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/header_bar"
@@ -17,6 +16,7 @@
         android:padding="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
         <TextView
             android:id="@+id/header_title"
             android:layout_width="wrap_content"
@@ -24,59 +24,41 @@
             android:text="@string/reminder_Text"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
-            android:fontFamily="sans-serif-medium"/>
+            android:fontFamily="sans-serif-medium" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/phone_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
-        android:text="Type in your phone number (to send you reminders):"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.488"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/header_bar" />
-
 
     <EditText
         android:id="@+id/phone_input"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:hint="@string/enter_phone_number"
         android:inputType="phone"
         android:padding="12dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/phone_label" />
+        app:layout_constraintTop_toBottomOf="@id/header_bar" />
 
     <EditText
         android:id="@+id/reminderBeforeDeadline"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="16dp"
         android:hint="@string/minute_before_deadline"
         android:inputType="phone"
         android:padding="12dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/phone_label" />
+        app:layout_constraintTop_toBottomOf="@id/phone_input" />
 
-    <Button
-        android:id="@+id/save_button"
-        android:layout_width="wrap_content"
+    <Spinner
+        android:id="@+id/reminder_interval_spinner"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:background="#B64931"
-        android:text="Send"
-        android:textColor="#FFFFFF"
+        android:spinnerMode="dropdown"
+        android:entries="@array/reminder_intervals"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/reminderBeforeDeadline" />
 
@@ -84,12 +66,23 @@
         android:id="@+id/Task_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toTopOf="@id/save_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/reminder_interval_spinner" />
+
+    <Button
+        android:id="@+id/save_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="#B64931"
+        android:text="Save"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/save_button"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

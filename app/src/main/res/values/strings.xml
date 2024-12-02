@@ -2,5 +2,13 @@
     <string name="app_name">Paws-Claws-Reminder</string>
     <string name="reminder_Text">Reminder</string>
     <string name="enter_phone_number">Enter phone number</string>
-    <string name="miniute_before_deadline">Miniute Before Deadline</string>
+    <string name="minute_before_deadline">Miniute Before Deadline</string>
+    <string-array name="reminder_intervals">
+        <item>None</item>
+        <item>Minute</item>
+        <item>Hourly</item>
+        <item>Daily</item>
+        <item>Weekly</item>
+        <item>Monthly</item>
+    </string-array>
 </resources>
