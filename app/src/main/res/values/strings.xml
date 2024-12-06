@@ -1,3 +1,52 @@
 <resources>
-    <string name="app_name">Paws-Claws-Reminder</string>
+    <!-- Common Strings -->
+    <string name="app_name">Paws Claws Reminder</string>
+
+    <!-- activity_main.xml -->
+    <string name="pet_profiles">Pet Profiles</string>
+    <string name="Create_pet_profiles">Create Pet Profiles</string>
+    <string name="add_pet_button_description">Add a new pet</string>
+    <!-- Pet descriptions -->
+    <string name="bella_description">Photo of Bella</string>
+    <string name="milo_description">Photo of Milo</string>
+    <string name="create_pet_button_description">Create a new pet profile</string>
+
+    <!-- Pet names -->
+    <string name="bella_name">Bella</string>
+    <string name="milo_name">Milo</string>
+    <string name="create_name">Create</string>
+
+    <!-- activity_create_pet.xml -->
+    <string name="create_pet_profile">Create Pet Profile</string>
+    <string name="upload_photo">Upload photo</string>
+    <string name="pet_name_hint">Pet\'s Name</string>
+
+    <!-- Default Prompt for Spinner -->
+    <string name="choose_pet_type">Choose your pet type</string>
+
+
+    <string name="pet_type_sample">Dog</string>
+
+    <string name="pet_age_sample">2 Years old</string>
+    <!-- Pet Types -->
+    <string-array name="pet_types">
+        <item>Dog</item>
+        <item>Cat</item>
+        <item>Rabbit</item>
+        <item>Bird</item>
+        <item>Fish</item>
+        <item>Other</item>
+    </string-array>
+
+    <string name="pet_birth_date_hint">Date of Birth (mm/dd/yyyy)</string>
+    <string name="create_button_text">Create</string>
+
+    <!-- activity_pet_detail.xml -->
+    <string name="pet_detail_header">Pet Detail</string>
+    <string name="default_pet_name">Pet Name</string>
+    <string name="pet_image_description">Image of the pet</string>
+
+    <!-- activity_main.xml -->
+    <string name="scrollable_content">Pet profiles grid</string>
+
 </resources>

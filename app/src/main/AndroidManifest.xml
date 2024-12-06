@@ -21,6 +21,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".CreatePetActivity"
+            android:exported="true" />
+        <activity
+            android:name=".PetDetailActivity"
+            android:exported="true" />
     </application>
 
 </manifest>
