@@ -6,4 +6,15 @@
     <string name="profile">Profile</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="reminder_Text">Reminder</string>
+    <string name="enter_phone_number">Enter phone number</string>
+    <string name="minute_before_deadline">Miniute Before Deadline</string>
+    <string-array name="reminder_intervals">
+        <item>None</item>
+        <item>Minute</item>
+        <item>Hourly</item>
+        <item>Daily</item>
+        <item>Weekly</item>
+        <item>Monthly</item>
+    </string-array>
 </resources>

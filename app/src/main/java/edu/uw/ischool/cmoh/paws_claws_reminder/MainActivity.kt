@@ -32,7 +32,11 @@ class MainActivity : AppCompatActivity() {
             when(it.itemId){
                 R.id.pets -> replaceFragment(Pets())
                 R.id.task -> replaceFragment(Task())
-                R.id.reminders -> replaceFragment(Reminders())
+                R.id.reminders -> {
+                    val bundle = Bundle()
+                    bundle.putInt("userId", 1)
+                    replaceFragment(Reminders(), bundle)
+                }
                 R.id.profile -> replaceFragment(Profile())
 
                 else -> {
@@ -44,7 +48,10 @@ class MainActivity : AppCompatActivity() {
     }
 
 //    replace the frame layout with the fragments
-    private fun replaceFragment(fragment: Fragment){
+    private fun replaceFragment(fragment: Fragment, args: Bundle? = null) {
+        if (args != null) {
+        fragment.arguments = args
+        }
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.frame_layout, fragment)
         fragmentTransaction.commit()
