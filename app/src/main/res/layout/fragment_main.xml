@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF">
+
+    <!-- Header -->
+    <TextView
+        android:id="@+id/pet_profiles_header"
+        android:layout_width="match_parent"
+        android:layout_height="92dp"
+        android:background="#B64931"
+        android:gravity="bottom|start"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp"
+        android:text="@string/pet_profiles"
+        android:textColor="#FFFFFF"
+        android:textSize="23sp" />
+
+    <!-- Scrollable Grid Layout -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:contentDescription="@string/scrollable_content">
+
+        <GridLayout
+            android:id="@+id/pet_grid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="3"
+            android:padding="16dp"
+            android:alignmentMode="alignMargins"
+            android:useDefaultMargins="true"
+            android:rowOrderPreserved="true" />
+
+
+    </ScrollView>
+</LinearLayout>

@@ -12,21 +12,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PawsClawsReminder"
         tools:targetApi="31">
+
+        <!-- 主 Activity 作为启动入口 -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".CreatePetActivity"
-            android:exported="true" />
-        <activity
-            android:name=".PetDetailActivity"
-            android:exported="true" />
+
+        <!-- 其他 Fragment 不需要在 Manifest 文件中注册 -->
     </application>
 
 </manifest>

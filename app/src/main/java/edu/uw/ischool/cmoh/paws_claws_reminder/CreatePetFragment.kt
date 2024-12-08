@@ -6,44 +6,52 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import java.io.File
 
-class CreatePetActivity : AppCompatActivity() {
+class CreatePetFragment : Fragment() {
     private lateinit var uploadPhotoButton: Button
     private lateinit var petNameEditText: EditText
     private lateinit var petTypeSpinner: Spinner
     private lateinit var petDobEditText: EditText
     private lateinit var createButton: Button
-    private lateinit var photoPreview: ImageView // 更新的预览图片视图
+    private lateinit var photoPreview: ImageView
     private var petPhotoUri: String = ""
 
     private lateinit var takePhotoLauncher: ActivityResultLauncher<Intent>
     private lateinit var pickPhotoLauncher: ActivityResultLauncher<Intent>
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_create_pet)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_create_pet, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         // 初始化控件
-        uploadPhotoButton = findViewById(R.id.Upload_photo)
-        petNameEditText = findViewById(R.id.et_pet_name)
-        petTypeSpinner = findViewById(R.id.spinner_pet_type)
-        petDobEditText = findViewById(R.id.et_pet_dob)
-        createButton = findViewById(R.id.btn_create_pet)
-        photoPreview = findViewById(R.id.photo_preview)
+        uploadPhotoButton = view.findViewById(R.id.Upload_photo)
+        petNameEditText = view.findViewById(R.id.et_pet_name)
+        petTypeSpinner = view.findViewById(R.id.spinner_pet_type)
+        petDobEditText = view.findViewById(R.id.et_pet_dob)
+        createButton = view.findViewById(R.id.btn_create_pet)
+        photoPreview = view.findViewById(R.id.photo_preview)
 
         // 初始化 ActivityResultLauncher
         takePhotoLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val photoBitmap = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-                    // 对于 API 33 或更高版本
                     result.data?.extras?.getParcelable("data", Bitmap::class.java)
                 } else {
-                    // 对于 API 28 到 32 的情况
                     @Suppress("DEPRECATION")
                     result.data?.extras?.get("data") as? Bitmap
                 }
@@ -52,9 +60,6 @@ class CreatePetActivity : AppCompatActivity() {
                 }
             }
         }
-
-
-
 
         pickPhotoLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -68,7 +73,7 @@ class CreatePetActivity : AppCompatActivity() {
 
         // 设置 Spinner 数据源
         ArrayAdapter.createFromResource(
-            this, R.array.pet_types, android.R.layout.simple_spinner_item
+            requireContext(), R.array.pet_types, android.R.layout.simple_spinner_item
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             petTypeSpinner.adapter = adapter
@@ -80,45 +85,46 @@ class CreatePetActivity : AppCompatActivity() {
 
     private fun selectPhoto() {
         val options = arrayOf("Take a Photo", "Choose from Gallery")
-        val builder = android.app.AlertDialog.Builder(this)
-        builder.setTitle("Upload Photo")
-        builder.setItems(options) { _, which ->
-            when (which) {
-                0 -> { // 拍照
-                    val takePhotoIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                    takePhotoLauncher.launch(takePhotoIntent)
-                }
-                1 -> { // 从相册选择
-                    val pickPhotoIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                    pickPhotoLauncher.launch(pickPhotoIntent)
+        AlertDialog.Builder(requireContext())
+            .setTitle("Upload Photo")
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> { // 拍照
+                        val takePhotoIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                        takePhotoLauncher.launch(takePhotoIntent)
+                    }
+                    1 -> { // 从相册选择
+                        val pickPhotoIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                        pickPhotoLauncher.launch(pickPhotoIntent)
+                    }
                 }
             }
-        }
-        builder.show()
+            .show()
     }
 
     private fun showPhotoPreview(photoBitmap: Bitmap) {
-        val builder = android.app.AlertDialog.Builder(this)
-        val previewView = ImageView(this).apply {
+        val previewView = ImageView(requireContext()).apply {
             setImageBitmap(photoBitmap)
             adjustViewBounds = true
             scaleType = ImageView.ScaleType.CENTER_CROP
         }
-        builder.setView(previewView)
-        builder.setPositiveButton("Use Photo") { _, _ ->
-            val uri = saveBitmapToUri(photoBitmap)
-            petPhotoUri = uri.toString()
-            updatePhotoPreview()
-        }
-        builder.setNegativeButton("Retake") { dialog, _ ->
-            dialog.dismiss()
-            selectPhoto()
-        }
-        builder.show()
+
+        AlertDialog.Builder(requireContext())
+            .setView(previewView)
+            .setPositiveButton("Use Photo") { _, _ ->
+                val uri = saveBitmapToUri(photoBitmap)
+                petPhotoUri = uri.toString()
+                updatePhotoPreview()
+            }
+            .setNegativeButton("Retake") { dialog, _ ->
+                dialog.dismiss()
+                selectPhoto()
+            }
+            .show()
     }
 
     private fun saveBitmapToUri(bitmap: Bitmap): Uri {
-        val file = File(filesDir, "temp_photo_${System.currentTimeMillis()}.jpg")
+        val file = File(requireContext().filesDir, "temp_photo_${System.currentTimeMillis()}.jpg")
         file.outputStream().use {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, it)
         }
@@ -136,13 +142,13 @@ class CreatePetActivity : AppCompatActivity() {
     private fun createPetProfile() {
         val petName = petNameEditText.text.toString()
         if (petName.isBlank()) {
-            Toast.makeText(this, "Pet name is required", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Pet name is required", Toast.LENGTH_SHORT).show()
             return
         }
 
         val petDob = petDobEditText.text.toString()
         if (petDob.isNotBlank() && !isValidDateFormat(petDob)) {
-            Toast.makeText(this, "Invalid date format. Please use MM/DD/YYYY.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Invalid date format. Please use MM/DD/YYYY.", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -156,9 +162,8 @@ class CreatePetActivity : AppCompatActivity() {
         )
         PetRepository.addPet(pet)
 
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-        finish()
+        // 返回主页面
+        parentFragmentManager.popBackStack()
     }
 
     private fun isValidDateFormat(date: String): Boolean {
