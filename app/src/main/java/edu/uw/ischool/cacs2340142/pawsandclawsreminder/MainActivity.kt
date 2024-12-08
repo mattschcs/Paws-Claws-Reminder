@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
         if (savedInstanceState == null) {
-           startFragment(LogIn())
+            startFragment(LogIn())
         }
     }
     private fun startFragment(fragment: Fragment) {

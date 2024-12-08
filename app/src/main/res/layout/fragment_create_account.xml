@@ -22,6 +22,7 @@
         app:layout_constraintTop_toBottomOf="@id/createAccountHeader"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="28dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,12 +34,13 @@
                 android:id="@+id/profile_image"
                 android:layout_width="96dp"
                 android:layout_height="96dp"
-                android:layout_marginTop="64dp"
+                android:layout_marginTop="104dp"
                 android:src="@drawable/profile_icon"
                 app:civ_border_color="#CA8649"
                 app:civ_border_width="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_bias="0.114"
+
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -46,11 +48,11 @@
                 android:id="@+id/add_picture_button"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_marginTop="136dp"
+                android:layout_marginTop="176dp"
                 android:background="@drawable/circular_shape"
                 android:src="@drawable/camera_icon"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_bias="0.054"
                 app:layout_constraintStart_toEndOf="@+id/profile_image"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -58,9 +60,11 @@
                 android:id="@+id/firstName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
-                android:hint="First Name"
+                android:layout_marginRight="16dp"
                 android:backgroundTint="#B64931"
+                android:hint="First Name"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/add_picture_button" />
@@ -69,42 +73,48 @@
                 android:id="@+id/lastName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginRight="16dp"
                 android:backgroundTint="#B64931"
                 android:hint="Last Name"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/firstName" />
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:backgroundTint="#B64931"
-                android:text="Date of Birth"
-                android:textSize="16sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/lastName" />
-
-            <EditText
+            <DatePicker
                 android:id="@+id/dateOfBirth"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#B64931"
+                android:layout_marginLeft="16dp"
                 android:layout_marginTop="8dp"
-                android:hint="mm/dd/yyyy"
+                android:layout_marginRight="16dp"
+                android:backgroundTint="#B64931"
+                android:calendarTextColor="#B64931"
+                android:calendarViewShown="false"
+                android:datePickerMode="spinner"
+                android:dayOfWeekBackground="#B64931"
+                android:foregroundTint="#B64931"
+                android:hint="Date of Birth"
+                android:inputType="date"
+                android:outlineAmbientShadowColor="#B64931"
+                android:outlineSpotShadowColor="#B64931"
+                android:yearListSelectorColor="#B64931"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/textView" />
+                app:layout_constraintTop_toBottomOf="@+id/DOBLabel" />
 
             <EditText
                 android:id="@+id/email"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="16dp"
                 android:backgroundTint="#B64931"
                 android:hint="Email"
+                android:inputType="textEmailAddress"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/dateOfBirth" />
@@ -113,9 +123,12 @@
                 android:id="@+id/phoneNumber"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginRight="16dp"
                 android:backgroundTint="#B64931"
                 android:hint="Phone Number"
+                android:inputType="phone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/email" />
@@ -124,9 +137,12 @@
                 android:id="@+id/password"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
                 android:layout_marginTop="8dp"
-                android:hint="Password"
+                android:layout_marginRight="16dp"
                 android:backgroundTint="#B64931"
+                android:hint="Password"
+                android:inputType="textPassword"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/phoneNumber" />
@@ -135,9 +151,12 @@
                 android:id="@+id/confirmPassword"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
                 android:layout_marginTop="8dp"
-                android:hint="Confirm Password"
+                android:layout_marginRight="16dp"
                 android:backgroundTint="#B64931"
+                android:hint="Confirm Password"
+                android:inputType="textPassword"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/password" />
@@ -149,10 +168,25 @@
                 android:layout_marginTop="28dp"
                 android:backgroundTint="#B64931"
                 android:text="Create"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/confirmPassword" />
+
+            <TextView
+                android:id="@+id/DOBLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:text="Date of Birth"
+                android:textColor="#B64931"
+                app:layout_constraintBottom_toTopOf="@+id/dateOfBirth"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.048"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lastName" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
