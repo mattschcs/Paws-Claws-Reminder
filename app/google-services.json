@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "177697740369",
+    "project_id": "paws-and-claws-836e1",
+    "storage_bucket": "paws-and-claws-836e1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:177697740369:android:9c1c7ddbc233ffcf0b4a70",
+        "android_client_info": {
+          "package_name": "edu.uw.ischool.cmoh.paws_claws_reminder"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAj2ejqQiF1kbsTII6PZWw6RDxQcrtiRCQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

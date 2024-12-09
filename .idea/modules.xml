@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Paws-Claws-Reminder.iml" filepath="$PROJECT_DIR$/.idea/modules/Paws-Claws-Reminder.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Paws-Claws-Reminder.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Paws-Claws-Reminder.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Paws-Claws-Reminder.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Paws-Claws-Reminder.app.androidTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Paws-Claws-Reminder.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Paws-Claws-Reminder.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Paws-Claws-Reminder.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Paws-Claws-Reminder.app.unitTest.iml" />
     </modules>
   </component>
 </project>
