@@ -62,8 +62,8 @@ class MainFragment : Fragment() {
     private fun addPetToGrid(pet: Pet) {
         // 宠物图片按钮
         val petImage = ImageButton(requireContext()).apply {
-            layoutParams = LinearLayout.LayoutParams(180, 180).apply {
-                setMargins(8)
+            layoutParams = LinearLayout.LayoutParams(200, 200).apply {
+                setMargins(8) // 统一的外边距
             }
             setBackgroundResource(R.drawable.circle_background)
             scaleType = ImageView.ScaleType.CENTER_CROP
@@ -71,17 +71,6 @@ class MainFragment : Fragment() {
                 setImageURI(Uri.parse(pet.photoUri))
             } else {
                 setImageResource(R.drawable.ic_pet_placeholder)
-            }
-            setOnClickListener {
-                val fragment = PetDetailFragment().apply {
-                    arguments = Bundle().apply {
-                        putString("petName", pet.name)
-                    }
-                }
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .addToBackStack(null)
-                    .commit()
             }
         }
 
@@ -106,7 +95,7 @@ class MainFragment : Fragment() {
                 height = GridLayout.LayoutParams.WRAP_CONTENT
                 columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
                 rowSpec = GridLayout.spec(GridLayout.UNDEFINED)
-                setMargins(16)
+                setMargins(16) // 统一的间距
             }
         }
         petContainer.addView(petImage)
@@ -120,26 +109,53 @@ class MainFragment : Fragment() {
      * 添加 "Create" 按钮
      */
     private fun addCreateButton() {
+        // 创建按钮图片
         val createButton = ImageButton(requireContext()).apply {
-            layoutParams = GridLayout.LayoutParams().apply {
-                width = 180
-                height = 180
-                setMargins(16)
+            layoutParams = LinearLayout.LayoutParams(200, 200).apply {
+                setMargins(8)
             }
             setBackgroundResource(R.drawable.circle_background)
             setImageResource(R.drawable.ic_add)
-            setOnClickListener {
-                // 跳转到创建宠物页面
-                val fragment = CreatePetFragment()
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .addToBackStack(null)
-                    .commit()
-            }
         }
 
-        // 将按钮添加到网格布局
-        petGrid.addView(createButton)
+        // 创建按钮文本
+        val createText = TextView(requireContext()).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            text = "Create"
+            textSize = 14f
+            gravity = Gravity.CENTER
+            setTextColor(Color.BLACK)
+        }
+
+        // 创建按钮容器
+        val createContainer = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER
+            layoutParams = GridLayout.LayoutParams().apply {
+                width = 0
+                height = GridLayout.LayoutParams.WRAP_CONTENT
+                columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
+                rowSpec = GridLayout.spec(GridLayout.UNDEFINED)
+                setMargins(16)
+            }
+            addView(createButton)
+            addView(createText)
+        }
+
+        createButton.setOnClickListener {
+            // 跳转到创建宠物页面
+            val fragment = CreatePetFragment()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
+
+        // 添加到网格布局
+        petGrid.addView(createContainer)
     }
 
     /**
