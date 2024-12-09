@@ -46,7 +46,7 @@ class LogIn : Fragment() {
     private fun loginUser(email: String, password: String){
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener{ task ->
             if(task.isSuccessful){
-                parentFragmentManager.beginTransaction().replace(R.id.main, temp()).addToBackStack(null).commit()
+                parentFragmentManager.beginTransaction().replace(R.id.main, user_account()).addToBackStack(null).commit()
             } else {
                 Toast.makeText(context, "Login failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
             }

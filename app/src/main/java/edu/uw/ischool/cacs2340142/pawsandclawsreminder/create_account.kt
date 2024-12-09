@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import java.util.Calendar
 
+
 class create_account : Fragment() {
 
     private lateinit var auth: FirebaseAuth
