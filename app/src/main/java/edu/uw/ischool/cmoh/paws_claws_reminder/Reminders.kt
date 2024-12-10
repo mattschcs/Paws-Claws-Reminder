@@ -186,7 +186,9 @@ class Reminders : Fragment() {
                 remindersList.forEach { reminder ->
                     Log.i("ReminderFragment", "Loaded reminder: $reminder")
                     Log.i("ReminderFragment", "Repeat: ${reminder.reminderRepeat}")
-                    scheduleSmsReminder(reminder)
+                    if(reminder.reminderRepeat != "None") {
+                        scheduleSmsReminder(reminder)
+                    }
                 }
             }
 
