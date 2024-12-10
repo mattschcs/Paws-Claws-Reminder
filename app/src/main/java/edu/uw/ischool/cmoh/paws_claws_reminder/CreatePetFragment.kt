@@ -156,7 +156,7 @@ class CreatePetFragment : Fragment() {
         }
 
         val petType = petTypeSpinner.selectedItem.toString()
-        val petId = database.child("pets").push().key // Generate unique pet ID
+        val petId = database.child("pets").child(userId!!).push().key // Generate unique pet ID
 
         if (userId != null && petId != null) {
             val petData = mapOf(
@@ -164,13 +164,13 @@ class CreatePetFragment : Fragment() {
                 "type" to petType,
                 "dob" to petDob,
                 "photoUri" to petPhotoUri,
-                "owner" to userId
+                "userId" to userId
             )
 
-            database.child("pets").child(petId).setValue(petData)
+            database.child("pets").child(userId!!).child(petId).setValue(petData)
                 .addOnSuccessListener {
                     Toast.makeText(requireContext(), "Pet profile created successfully", Toast.LENGTH_SHORT).show()
-                    parentFragmentManager.popBackStack()
+                    parentFragmentManager.popBackStack() // Go back to PetsMainFragment
                 }
                 .addOnFailureListener { exception ->
                     Toast.makeText(requireContext(), "Failed to save pet: ${exception.message}", Toast.LENGTH_SHORT).show()
@@ -179,6 +179,7 @@ class CreatePetFragment : Fragment() {
             Toast.makeText(requireContext(), "Failed to create pet profile.", Toast.LENGTH_SHORT).show()
         }
     }
+
 
 
     private fun isValidDateFormat(date: String): Boolean {

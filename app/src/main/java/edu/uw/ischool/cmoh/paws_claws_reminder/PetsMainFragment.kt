@@ -11,13 +11,15 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.core.view.setMargins
 import androidx.fragment.app.Fragment
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
 class PetsMainFragment : Fragment() {
 
     private lateinit var petGrid: GridLayout
     private lateinit var database: DatabaseReference
-    private val tag = "Pets_MainFragment"
+    private lateinit var userId: String
+    private val tag = "PetsMainFragment"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,28 +32,41 @@ class PetsMainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         petGrid = view.findViewById(R.id.pet_grid)
-        database = FirebaseDatabase.getInstance().getReference("pets")
 
+        // Initialize Firebase Database reference and userId
+        database = FirebaseDatabase.getInstance().getReference("pets")
+        userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+
+        if (userId.isEmpty()) {
+            Toast.makeText(requireContext(), "User not authenticated", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Load pet data from Firebase
         loadPetsFromFirebase()
     }
 
     private fun loadPetsFromFirebase() {
-        database.addValueEventListener(object : ValueEventListener {
+        database.child(userId).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+                petGrid.removeAllViews()
                 if (!snapshot.exists()) {
-                    Log.e(tag, "No pets found.")
-                    addCreateButton() // 确保即使没有宠物也会显示创建按钮
+                    Log.d(tag, "No pets found.")
+                    addCreateButton()
                     return
                 }
-                petGrid.removeAllViews()
+
                 for (petSnapshot in snapshot.children) {
                     val pet = petSnapshot.getValue(PetModel::class.java)
+                    val petId = petSnapshot.key ?: ""
                     if (pet != null) {
-                        addPetToGrid(pet, petSnapshot.key ?: "")
+                        addPetToGrid(pet, petId)
                     } else {
                         Log.e(tag, "Failed to parse pet data: ${petSnapshot.value}")
                     }
                 }
+
+                // Ensure "Create" button is always visible
                 addCreateButton()
             }
 
@@ -61,10 +76,22 @@ class PetsMainFragment : Fragment() {
         })
     }
 
-
-
     private fun addPetToGrid(pet: PetModel, petId: String) {
-        // Create the ImageButton for the pet's image
+        val petContainer = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER
+            layoutParams = GridLayout.LayoutParams().apply {
+                width = 0
+                height = GridLayout.LayoutParams.WRAP_CONTENT
+                columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
+                rowSpec = GridLayout.spec(GridLayout.UNDEFINED)
+                setMargins(16)
+            }
+            setOnClickListener {
+                navigateToPetDetail(petId)
+            }
+        }
+
         val petImage = ImageButton(requireContext()).apply {
             layoutParams = LinearLayout.LayoutParams(200, 200).apply { setMargins(8) }
             setBackgroundResource(R.drawable.circle_background)
@@ -74,11 +101,9 @@ class PetsMainFragment : Fragment() {
             } else {
                 setImageResource(R.drawable.ic_pet_placeholder)
             }
-            isClickable = false // Disable the default clickability of ImageButton
-            isFocusable = false // Ensure the ImageButton does not take focus
+            isClickable = false // Disable clicks on the button itself to ensure the container handles the click
         }
 
-        // Create the TextView for the pet's name
         val petName = TextView(requireContext()).apply {
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -90,37 +115,21 @@ class PetsMainFragment : Fragment() {
             setTextColor(Color.BLACK)
         }
 
-        // Combine the image and name into a single clickable container
-        val petContainer = LinearLayout(requireContext()).apply {
-            orientation = LinearLayout.VERTICAL
-            gravity = Gravity.CENTER
-            layoutParams = GridLayout.LayoutParams().apply {
-                width = 0
-                height = GridLayout.LayoutParams.WRAP_CONTENT
-                columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
-                rowSpec = GridLayout.spec(GridLayout.UNDEFINED)
-                setMargins(16)
-            }
-            addView(petImage)
-            addView(petName)
-
-            // Set the click listener for the entire container
-            setOnClickListener {
-                val bundle = Bundle().apply {
-                    putString("petId", petId) // Pass the pet ID to the detail page
-                }
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.main, PetDetailFragment().apply { arguments = bundle })
-                    .addToBackStack(null)
-                    .commit()
-            }
-        }
-
-        // Add the container to the grid
+        petContainer.addView(petImage)
+        petContainer.addView(petName)
         petGrid.addView(petContainer)
     }
 
-
+    private fun navigateToPetDetail(petId: String) {
+        val bundle = Bundle().apply {
+            putString("petId", petId)
+            putString("userId", userId)
+        }
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.main, PetDetailFragment().apply { arguments = bundle })
+            .addToBackStack(null)
+            .commit()
+    }
 
     private fun addCreateButton() {
         val createButton = ImageButton(requireContext()).apply {
