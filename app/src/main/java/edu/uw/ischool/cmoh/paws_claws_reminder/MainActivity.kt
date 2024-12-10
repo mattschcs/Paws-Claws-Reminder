@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.ui.graphics.Color
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
@@ -26,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         bottomNavBar = findViewById(R.id.bottomNavigationView)
         bottomNavBar.setOnItemSelectedListener {
             when (it.itemId) {
-                R.id.pets -> replaceFragment(Pets())
+                R.id.pets -> replaceFragment(Pets_MainFragment())
                 R.id.task -> replaceFragment(Task())
                 R.id.reminders -> replaceFragment(Reminders())
                 R.id.profile -> replaceFragment(Profile())
