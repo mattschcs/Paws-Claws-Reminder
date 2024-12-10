@@ -46,7 +46,7 @@ class addTask : Fragment() {
         }
 
         finishTaskButton.setOnClickListener{
-            parentFragmentManager.beginTransaction().replace(R.id.frame_layout, Task()).commit()
+            parentFragmentManager.beginTransaction().replace(R.id.main, Task()).commit()
         }
     }
 
