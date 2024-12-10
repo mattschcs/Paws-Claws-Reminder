@@ -1,5 +1,6 @@
 package edu.uw.ischool.cmoh.paws_claws_reminder
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,8 +12,8 @@ class PetAdapter(private var tasks: List<TaskModel>) :
     RecyclerView.Adapter<PetAdapter.TaskViewHolder>() {
 
     class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val taskName: TextView = itemView.findViewById(R.id.task_name)
-        val taskDetails: TextView = itemView.findViewById(R.id.task_details)
+        val taskName: TextView = itemView.findViewById(R.id.tv_task_name)
+        val taskDetails: TextView = itemView.findViewById(R.id.tv_task_details)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
@@ -22,6 +23,7 @@ class PetAdapter(private var tasks: List<TaskModel>) :
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val task = tasks[position]
+        Log.d("PetAdapter", "Binding task: $task")
         holder.taskName.text = task.taskName
         holder.taskDetails.text = task.details
     }

@@ -97,29 +97,41 @@ class PetDetailFragment : Fragment() {
 
 
     private fun loadTasksForPet(userId: String, petName: String) {
-        database.child("tasks").get().addOnSuccessListener { snapshot ->
-            if (!snapshot.exists()) {
-                Log.w(tag, "No tasks found in the database.")
-                return@addOnSuccessListener
-            }
+        // ADDITION: 使用映射表处理动态键
+        val taskMap = mutableMapOf<String, TaskModel>()
 
-            val tasks = mutableListOf<TaskModel>()
-            for (taskSnapshot in snapshot.children) {
-                val task = taskSnapshot.getValue(TaskModel::class.java)
-                if (task != null && task.userId == userId) {
-                    // 检查 petName 是否匹配
-                    if (task.petName != null && task.petName.contains(petName)) {
-                        tasks.add(task)
-                        Log.d(tag, "Task added: $task")
+        database.child("tasks").child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (taskSnapshot in snapshot.children) {
+                    val taskId = taskSnapshot.key ?: continue
+                    val task = taskSnapshot.getValue(TaskModel::class.java)
+                    if (task != null && task.petName != null && task.petName.contains(petName)) {
+                        taskMap[taskId] = task
+                        Log.d(tag, "Mapped task: $taskId -> $task")
                     }
                 }
+
+                Log.d(tag, "Tasks loaded for pet ($petName): ${taskMap.size}")
+                updateTaskListUI(taskMap) // 调用方法更新UI
             }
 
-            Log.d(tag, "Total tasks loaded for pet: ${tasks.size}")
-        }.addOnFailureListener {
-            Log.e(tag, "Failed to load tasks: ${it.message}")
+            override fun onCancelled(error: DatabaseError) {
+                Log.e(tag, "Failed to load tasks: ${error.message}")
+            }
+        })
+    }
+
+    // ADDITION: 更新任务列表的UI
+    private fun updateTaskListUI(taskMap: Map<String, TaskModel>) {
+        val tasks = taskMap.values.toList()
+        if (tasks.isEmpty()) {
+            Log.w(tag, "No tasks found for the specified pet.")
+        } else {
+            Log.d(tag, "Updating UI with ${tasks.size} tasks.")
+            petAdapter.updateTasks(tasks) // 更新RecyclerView的适配器
         }
     }
+
 
 
 
