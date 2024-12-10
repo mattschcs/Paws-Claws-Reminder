@@ -49,7 +49,7 @@ class user_profiles : Fragment() {
         // Add user button click listener
         addUserProfilePicture.setOnClickListener {
             parentFragmentManager.beginTransaction()
-                .replace(R.id.main, add_user_profle())
+                .replace(R.id.fragment_container, add_user_profle())
                 .addToBackStack(null)
                 .commit()
         }
@@ -84,7 +84,7 @@ class user_profiles : Fragment() {
                         mainUserProfilePicture.setOnClickListener {
                             val mainUserFragment = user_account()
                             parentFragmentManager.beginTransaction()
-                                .replace(R.id.main, mainUserFragment)
+                                .replace(R.id.fragment_container, mainUserFragment)
                                 .addToBackStack(null)
                                 .commit()
                         }
@@ -133,7 +133,7 @@ class user_profiles : Fragment() {
                             userAccountFragment.arguments = bundle
 
                             parentFragmentManager.beginTransaction()
-                                .replace(R.id.main, userAccountFragment)
+                                .replace(R.id.fragment_container, userAccountFragment)
                                 .addToBackStack(null)
                                 .commit()
                         }

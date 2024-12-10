@@ -38,7 +38,7 @@ class LogIn : Fragment() {
         }
 
         createAccountLink.setOnClickListener{
-            parentFragmentManager.beginTransaction().replace(R.id.main, create_account()).addToBackStack(null).commit()
+            parentFragmentManager.beginTransaction().replace(R.id.fragment_container, create_account()).addToBackStack(null).commit()
         }
         return view
     }
@@ -46,7 +46,7 @@ class LogIn : Fragment() {
     private fun loginUser(email: String, password: String){
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener{ task ->
             if(task.isSuccessful){
-                parentFragmentManager.beginTransaction().replace(R.id.main, user_profiles()).addToBackStack(null).commit()
+                parentFragmentManager.beginTransaction().replace(R.id.fragment_container, user_profiles()).addToBackStack(null).commit()
             } else {
                 Toast.makeText(context, "Login failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
             }

@@ -1,77 +1,136 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="0dp">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".create_pet">
 
-    <!-- Header -->
-    <TextView
-        android:id="@+id/create_pet_header"
+    <include
+        android:id="@+id/createPetHeader"
+        layout="@layout/header_bar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="92dp"
-        android:background="#B64931"
-        android:gravity="bottom|start"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="8dp"
-        android:text="@string/create_pet_profile"
-        android:textColor="#FFFFFF"
-        android:textSize="23sp"
-        android:textStyle="bold" />
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/createPetHeader"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="28dp"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-    <ImageView
-        android:id="@+id/photo_preview"
-        android:layout_width="125dp"
-        android:layout_height="113dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:contentDescription="@string/pet_image_description"
-        android:src="@drawable/ic_pet_placeholder" />
 
-    <Button
-        android:id="@+id/Upload_photo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/upload_photo"
-        android:layout_gravity="center" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
 
-    <EditText
-        android:id="@+id/et_pet_name"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:hint="@string/pet_name_hint"
-        android:inputType="text"
-        android:autofillHints="name"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/pet_profile_image"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:layout_marginTop="104dp"
+                android:src="@drawable/pet_icon_temp"
+                app:civ_border_color="#CA8649"
+                app:civ_border_width="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.114"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <Spinner
-        android:id="@+id/spinner_pet_type"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:prompt="@string/choose_pet_type" />
+            <ImageButton
+                android:id="@+id/add_pet_picture_button"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="176dp"
+                android:background="@drawable/circular_shape"
+                android:src="@drawable/camera_icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.054"
+                app:layout_constraintStart_toEndOf="@+id/pet_profile_image"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/et_pet_dob"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:hint="@string/pet_birth_date_hint"
-        android:inputType="date"
-        android:autofillHints="birthDate"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp" />
+            <EditText
+                android:id="@+id/petName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:backgroundTint="#B64931"
+                android:hint="Pet Name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/add_pet_picture_button" />
 
-    <Button
-        android:id="@+id/btn_create_pet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/create_button_text" />
-</LinearLayout>
+            <Spinner
+                android:id="@+id/spinner_pet_type"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"
+                android:prompt="@string/choose_pet_type"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/petName" />
+
+            <TextView
+                android:id="@+id/DOBLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:text="Date of Birth"
+                android:textColor="#B64931"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.048"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/spinner_pet_type" />
+
+            <DatePicker
+                android:id="@+id/petDateOfBirth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="16dp"
+                android:backgroundTint="#B64931"
+                android:calendarTextColor="#B64931"
+                android:calendarViewShown="false"
+                android:datePickerMode="spinner"
+                android:dayOfWeekBackground="#B64931"
+                android:foregroundTint="#B64931"
+                android:hint="Date of Birth"
+                android:inputType="date"
+                android:outlineAmbientShadowColor="#B64931"
+                android:outlineSpotShadowColor="#B64931"
+                android:yearListSelectorColor="#B64931"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/DOBLabel" />
+
+            <Button
+                android:id="@+id/addPetButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:backgroundTint="#B64931"
+                android:text="Add Pet"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/petDateOfBirth" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

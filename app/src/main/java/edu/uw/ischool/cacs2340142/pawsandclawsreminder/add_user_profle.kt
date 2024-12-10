@@ -158,7 +158,7 @@ class add_user_profle : Fragment() {
                 if (task.isSuccessful) {
                     Toast.makeText(context, "Profile created successfully", Toast.LENGTH_SHORT).show()
                     parentFragmentManager.beginTransaction()
-                        .replace(R.id.main, user_profiles())
+                        .replace(R.id.fragment_container, user_profiles())
                         .addToBackStack(null)
                         .commit()
                 } else {

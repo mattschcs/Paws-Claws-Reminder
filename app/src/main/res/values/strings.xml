@@ -78,4 +78,6 @@
 
     <!-- Pet Profiles Grid -->
     <string name="scrollable_content">Pet profiles grid</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -37,6 +37,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_nav_bar"
+        android:backgroundTint="#B64931"
         app:itemIconTint="@color/white"
         app:itemTextColor="@color/white"
         android:visibility="gone">

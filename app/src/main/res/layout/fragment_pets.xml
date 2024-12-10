@@ -84,9 +84,15 @@
 
     </ScrollView>
 
-<!--    <include-->
-<!--        layout="@layout/navbar"-->
-<!--        />-->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationViewPet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#B64931"
+        app:menu="@menu/bottom_nav_bar"
+        app:itemIconTint="@color/white"
+        app:itemTextColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

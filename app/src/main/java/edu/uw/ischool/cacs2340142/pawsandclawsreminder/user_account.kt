@@ -17,6 +17,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
 
@@ -35,9 +36,40 @@ class user_account : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottomNavigationViewProfile)
+
         // Highlight the Profile tab
-        val navBar = activity?.findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(R.id.bottomNavigationView)
+        val navBar = activity?.findViewById<BottomNavigationView>(R.id.bottomNavigationViewProfile)
         navBar?.selectedItemId = R.id.profile
+
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.pets -> {
+                    navigateToFragment(Pets())
+                    true
+                }
+                R.id.task -> {
+                    navigateToFragment(Task())
+                    true
+                }
+                R.id.reminders -> {
+                    navigateToFragment(Reminders())
+                    true
+                }
+                R.id.profile -> {
+                    true
+                }
+                else -> false
+            }
+        }
+
+    }
+
+    private fun navigateToFragment(fragment: Fragment) {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     override fun onCreateView(
@@ -68,7 +100,7 @@ class user_account : Fragment() {
 
         switchUser.setOnClickListener{
             parentFragmentManager.beginTransaction()
-                .replace(R.id.main, user_profiles())
+                .replace(R.id.fragment_container, user_profiles())
                 .addToBackStack(null)
                 .commit()
         }

@@ -3,9 +3,10 @@ package edu.uw.ischool.cacs2340142.pawsandclawsreminder
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
+import android.view.View
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
@@ -21,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     }
     private fun startFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.main, fragment)
+            .replace(R.id.fragment_container, fragment)
             .commit()
     }
 }
