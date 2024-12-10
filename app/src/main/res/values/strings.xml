@@ -68,6 +68,9 @@
 
     <string name="pet_birth_date_hint">Date of Birth (mm/dd/yyyy)</string>
     <string name="create_button_text">Create</string>
+    <string name="create_pet">Create</string>
+    <string name="no_pets">No pets found. Add a new pet!</string>
+
 
     <!-- Pet Detail Activity -->
     <string name="pet_detail_header">Pet Detail</string>

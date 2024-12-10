@@ -9,8 +9,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class PetAdapter(
-    private val pets: List<PetModel>, // 修改为 PetModel
-    private val onPetClick: (PetModel) -> Unit // 修改为 PetModel
+    private val pets: List<PetModel>,
+    private val onPetClick: (PetModel) -> Unit
 ) : RecyclerView.Adapter<PetAdapter.PetViewHolder>() {
 
     class PetViewHolder(view: View) : RecyclerView.ViewHolder(view) {

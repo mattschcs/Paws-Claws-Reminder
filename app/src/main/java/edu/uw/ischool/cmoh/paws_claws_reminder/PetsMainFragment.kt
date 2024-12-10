@@ -8,18 +8,16 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.GridLayout
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.core.view.setMargins
 import androidx.fragment.app.Fragment
+import com.google.firebase.database.*
 
-class Pets_MainFragment : Fragment() {
+class PetsMainFragment : Fragment() {
 
     private lateinit var petGrid: GridLayout
-    private val TAG = "Pets_MainFragment"
+    private lateinit var database: DatabaseReference
+    private val tag = "Pets_MainFragment"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,38 +27,45 @@ class Pets_MainFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Log.d("PetDetailFragment", "Fragment loaded with arguments: ${arguments}")
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize GridLayout
         petGrid = view.findViewById(R.id.pet_grid)
+        database = FirebaseDatabase.getInstance().getReference("pets")
 
-        // Load pet data
-        loadPets()
+        loadPetsFromFirebase()
     }
 
-    private fun loadPets() {
-        val pets = PetRepository.getAllPets()
-
-        // Clear existing layout to avoid duplication
-        if (petGrid.childCount > 0) {
-            petGrid.removeAllViews()
-        }
-
-        // Dynamically add each pet
-        pets.forEach { pet ->
-            addPetToGrid(pet)
-        }
-
-        // Add the "Create" button at the end of the grid
-        addCreateButton()
-    }
-
-    private fun addPetToGrid(pet: PetModel) {
-        val petImage = ImageButton(requireContext()).apply {
-            layoutParams = LinearLayout.LayoutParams(200, 200).apply {
-                setMargins(8)
+    private fun loadPetsFromFirebase() {
+        database.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (!snapshot.exists()) {
+                    Log.e(tag, "No pets found.")
+                    addCreateButton() // 确保即使没有宠物也会显示创建按钮
+                    return
+                }
+                petGrid.removeAllViews()
+                for (petSnapshot in snapshot.children) {
+                    val pet = petSnapshot.getValue(PetModel::class.java)
+                    if (pet != null) {
+                        addPetToGrid(pet, petSnapshot.key ?: "")
+                    } else {
+                        Log.e(tag, "Failed to parse pet data: ${petSnapshot.value}")
+                    }
+                }
+                addCreateButton()
             }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e(tag, "Failed to load pets: ${error.message}")
+            }
+        })
+    }
+
+
+
+    private fun addPetToGrid(pet: PetModel, petId: String) {
+        val petImage = ImageButton(requireContext()).apply {
+            layoutParams = LinearLayout.LayoutParams(200, 200).apply { setMargins(8) }
             setBackgroundResource(R.drawable.circle_background)
             scaleType = ImageView.ScaleType.CENTER_CROP
             if (pet.photoUri.isNotEmpty()) {
@@ -95,22 +100,12 @@ class Pets_MainFragment : Fragment() {
             addView(petName)
         }
 
-        // Add click event
         petContainer.setOnClickListener {
-            Log.d("Pets_MainFragment", "Clicked on pet: ${pet.name}")
-
-            // Create a Bundle and pass data
             val bundle = Bundle().apply {
-                putString("petName", pet.name)
+                putString("petId", petId)
             }
-
-            val fragment = PetDetailFragment().apply {
-                arguments = bundle
-            }
-
-            //  replace current Fragment
             parentFragmentManager.beginTransaction()
-                .replace(R.id.main, fragment)
+                .replace(R.id.main, PetDetailFragment().apply { arguments = bundle })
                 .addToBackStack(null)
                 .commit()
         }
@@ -118,12 +113,9 @@ class Pets_MainFragment : Fragment() {
         petGrid.addView(petContainer)
     }
 
-
     private fun addCreateButton() {
         val createButton = ImageButton(requireContext()).apply {
-            layoutParams = LinearLayout.LayoutParams(200, 200).apply {
-                setMargins(8)
-            }
+            layoutParams = LinearLayout.LayoutParams(200, 200).apply { setMargins(8) }
             setBackgroundResource(R.drawable.circle_background)
             setImageResource(R.drawable.ic_add)
         }
@@ -133,7 +125,7 @@ class Pets_MainFragment : Fragment() {
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
-            text = "Create"
+            text = getString(R.string.create_pet)
             textSize = 14f
             gravity = Gravity.CENTER
             setTextColor(Color.BLACK)
@@ -154,37 +146,12 @@ class Pets_MainFragment : Fragment() {
         }
 
         createButton.setOnClickListener {
-            Log.d(TAG, "Create button clicked")
-            val fragment = CreatePetFragment()
             parentFragmentManager.beginTransaction()
-                .replace(R.id.main, fragment)
+                .replace(R.id.main, CreatePetFragment())
                 .addToBackStack(null)
                 .commit()
         }
 
         petGrid.addView(createContainer)
-    }
-
-    private fun navigateToPetDetail(petName: String) {
-        try {
-            Log.d(TAG, "Navigating to PetDetailFragment with pet name: $petName")
-            val fragment = PetDetailFragment()
-            val bundle = Bundle().apply {
-                putString("petName", petName)
-            }
-            fragment.arguments = bundle
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.main, fragment)
-                .addToBackStack(null)
-                .commit()
-            Log.d(TAG, "Navigation to PetDetailFragment successful.")
-        } catch (e: Exception) {
-            Log.e(TAG, "Error navigating to PetDetailFragment: ${e.message}")
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        loadPets()
     }
 }

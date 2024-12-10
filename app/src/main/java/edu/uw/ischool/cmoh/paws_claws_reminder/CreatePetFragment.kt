@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,9 +15,12 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import java.io.File
 
 class CreatePetFragment : Fragment() {
+
     private lateinit var uploadPhotoButton: Button
     private lateinit var petNameEditText: EditText
     private lateinit var petTypeSpinner: Spinner
@@ -27,6 +31,10 @@ class CreatePetFragment : Fragment() {
 
     private lateinit var takePhotoLauncher: ActivityResultLauncher<Intent>
     private lateinit var pickPhotoLauncher: ActivityResultLauncher<Intent>
+
+    private val database = FirebaseDatabase.getInstance().reference
+    private val userId = FirebaseAuth.getInstance().currentUser?.uid // UID of the current login user
+    private val tag = "CreatePetFragment"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,12 +57,7 @@ class CreatePetFragment : Fragment() {
         // Initialize ActivityResultLauncher
         takePhotoLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                val photoBitmap = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-                    result.data?.extras?.getParcelable("data", Bitmap::class.java)
-                } else {
-                    @Suppress("DEPRECATION")
-                    result.data?.extras?.get("data") as? Bitmap
-                }
+                val photoBitmap = result.data?.extras?.get("data") as? Bitmap
                 if (photoBitmap != null) {
                     showPhotoPreview(photoBitmap)
                 }
@@ -89,11 +92,11 @@ class CreatePetFragment : Fragment() {
             .setTitle("Upload Photo")
             .setItems(options) { _, which ->
                 when (which) {
-                    0 -> { // Take photo
+                    0 -> {
                         val takePhotoIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                         takePhotoLauncher.launch(takePhotoIntent)
                     }
-                    1 -> { // Choose from gallery
+                    1 -> {
                         val pickPhotoIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                         pickPhotoLauncher.launch(pickPhotoIntent)
                     }
@@ -153,18 +156,30 @@ class CreatePetFragment : Fragment() {
         }
 
         val petType = petTypeSpinner.selectedItem.toString()
+        val petId = database.child("pets").push().key // Generate unique pet ID
 
-        val pet = PetModel( // Changed to use PetModel
-            name = petName,
-            photoUri = petPhotoUri,
-            type = petType,
-            dob = petDob
-        )
-        PetRepository.addPet(pet)
+        if (userId != null && petId != null) {
+            val petData = mapOf(
+                "name" to petName,
+                "type" to petType,
+                "dob" to petDob,
+                "photoUri" to petPhotoUri,
+                "owner" to userId
+            )
 
-        // Return to main screen
-        parentFragmentManager.popBackStack()
+            database.child("pets").child(petId).setValue(petData)
+                .addOnSuccessListener {
+                    Toast.makeText(requireContext(), "Pet profile created successfully", Toast.LENGTH_SHORT).show()
+                    parentFragmentManager.popBackStack()
+                }
+                .addOnFailureListener { exception ->
+                    Toast.makeText(requireContext(), "Failed to save pet: ${exception.message}", Toast.LENGTH_SHORT).show()
+                }
+        } else {
+            Toast.makeText(requireContext(), "Failed to create pet profile.", Toast.LENGTH_SHORT).show()
+        }
     }
+
 
     private fun isValidDateFormat(date: String): Boolean {
         return try {

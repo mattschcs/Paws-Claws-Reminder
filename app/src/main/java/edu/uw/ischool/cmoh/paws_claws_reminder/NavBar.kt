@@ -23,11 +23,11 @@ class NavBar : AppCompatActivity() {
         }
 
         bottomNavBar = findViewById(R.id.bottomNavigationView)
-        replaceFragment(Pets_MainFragment())
+        replaceFragment(PetsMainFragment())
 
         bottomNavBar.setOnItemSelectedListener {
             when(it.itemId){
-                R.id.pets -> replaceFragment(Pets_MainFragment())
+                R.id.pets -> replaceFragment(PetsMainFragment())
                 R.id.task -> replaceFragment(Task())
                 R.id.reminders -> replaceFragment(Reminders())
                 R.id.profile -> replaceFragment(Profile())
