@@ -21,23 +21,19 @@ class create_pet : Fragment() {
     private lateinit var auth: FirebaseAuth
     private val database = FirebaseDatabase.getInstance().reference
     private val storageReference: StorageReference = FirebaseStorage.getInstance().reference
-
-    private var selectedImageUri: Uri? = null
-    private lateinit var newProfileImageView: CircleImageView
-
     private lateinit var petImageView: CircleImageView
     private lateinit var petNameEditText: EditText
-    private lateinit var petTypeSpinner: Spinner
     private lateinit var petDOBPicker: DatePicker
+    private lateinit var petTypeSpinner: Spinner
     private lateinit var addPetButton: Button
-
+    private var selectedImageUri: Uri? = null
 
     private val selectImageLauncher = registerForActivityResult(
         ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         if (uri != null) {
             selectedImageUri = uri
-            newProfileImageView.setImageURI(uri)
+            petImageView.setImageURI(uri)
         } else {
             Toast.makeText(context, "No image selected", Toast.LENGTH_SHORT).show()
         }
@@ -47,19 +43,20 @@ class create_pet : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_create_pet, container, false)
-        val headerCreateAccountPage: Toolbar = view.findViewById(R.id.createPetHeader)
-        headerCreateAccountPage.title = "Create New Pet Profile"
 
+        // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
 
+        // Initialize Views
         petImageView = view.findViewById(R.id.pet_profile_image)
         petNameEditText = view.findViewById(R.id.petName)
-        petTypeSpinner = view.findViewById(R.id.spinner_pet_type)
         petDOBPicker = view.findViewById(R.id.petDateOfBirth)
+        petTypeSpinner = view.findViewById(R.id.spinner_pet_type)
         addPetButton = view.findViewById(R.id.addPetButton)
+        val addPictureButton: ImageButton = view.findViewById(R.id.add_pet_picture_button)
 
+        // Setup Spinner
         ArrayAdapter.createFromResource(
             requireContext(),
             R.array.pet_types,
@@ -69,47 +66,27 @@ class create_pet : Fragment() {
             petTypeSpinner.adapter = adapter
         }
 
-        petImageView.setOnClickListener {
+        // Setup DatePicker
+        setupDatePicker(petDOBPicker)
+
+        // Setup Image Picker
+        addPictureButton.setOnClickListener {
             selectImageLauncher.launch("image/*")
         }
 
+        // Setup Add Pet Button
         addPetButton.setOnClickListener {
-            addPet()
-        }
+            val petName = petNameEditText.text.toString().trim()
+            val petDOB = getDateOfBirth(petDOBPicker)
+            val petType = petTypeSpinner.selectedItem.toString()
 
+            if (isInputValid(petName, petDOB, petType)) {
+                createPet(petName, petDOB, petType)
+            }
+        }
 
         return view
     }
-
-    private fun navigateBackToPetsFragment() {
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, ())
-            .addToBackStack(null)
-            .commit()
-    }
-
-    private fun addPet() {
-        val petName = petNameEditText.text.toString().trim()
-        val petType = petTypeSpinner.selectedItem.toString()
-        val petDOB = "${petDOBPicker.month + 1}/${petDOBPicker.dayOfMonth}/${petDOBPicker.year}"
-
-        if (petName.isEmpty() || selectedImageUri == null) {
-            Toast.makeText(requireContext(), "Please complete all fields", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        val database = FirebaseDatabase.getInstance()
-        val petId = database.reference.push().key ?: UUID.randomUUID().toString()
-        val petData = mapOf(
-            "id" to petId,
-            "name" to petName,
-            "type" to petType,
-            "dob" to petDOB
-        )
-
-        uploadPetImage(petId, petData)
-    }
-
 
     private fun setupDatePicker(datePicker: DatePicker) {
         val calendar = Calendar.getInstance()
@@ -119,26 +96,50 @@ class create_pet : Fragment() {
         datePicker.init(currentYear, currentMonth, currentDay, null)
     }
 
-    private fun savePetToDatabase(petId: String, petData: Map<String, Any>, imageUrl: String) {
-        val database = FirebaseDatabase.getInstance()
-        val petRef = database.reference.child("pets").child(petId)
+    private fun getDateOfBirth(datePicker: DatePicker): String {
+        val year = datePicker.year
+        val month = datePicker.month + 1
+        val day = datePicker.dayOfMonth
+        return "$day/$month/$year"
+    }
 
-        val petDataWithImage = petData.toMutableMap()
-        petDataWithImage["imageUrl"] = imageUrl
-
-        petRef.setValue(petDataWithImage)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Toast.makeText(requireContext(), "Pet added successfully!", Toast.LENGTH_SHORT).show()
-                    navigateBackToPetsFragment()
-                } else {
-                    Toast.makeText(requireContext(), "Failed to add pet to database.", Toast.LENGTH_SHORT).show()
-                }
+    private fun isInputValid(petName: String, petDOB: String, petType: String): Boolean {
+        return when {
+            petName.isEmpty() || petDOB.isEmpty() || petType.isEmpty() -> {
+                Toast.makeText(context, "All fields are required", Toast.LENGTH_SHORT).show()
+                false
             }
+            selectedImageUri == null -> {
+                Toast.makeText(context, "Please select a pet image", Toast.LENGTH_SHORT).show()
+                false
+            }
+            else -> true
+        }
+    }
+
+    private fun createPet(petName: String, petDOB: String, petType: String) {
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            val userId = currentUser.uid
+            val petId = database.push().key ?: UUID.randomUUID().toString()
+            val petRef = database.child("users").child(userId).child("pets").child(petId)
+
+            val petData = mapOf(
+                "name" to petName,
+                "dob" to petDOB,
+                "type" to petType
+            )
+
+            if (selectedImageUri != null) {
+                uploadPetImage(petId, petData)
+            } else {
+                savePetToDatabase(petId, petData, null)
+            }
+        }
     }
 
     private fun uploadPetImage(petId: String, petData: Map<String, Any>) {
-        val imageRef = storageReference.child("pet_images").child("$petId.jpg")
+        val imageRef = storageReference.child("pet_images/$petId.jpg")
         imageRef.putFile(selectedImageUri!!)
             .addOnSuccessListener {
                 imageRef.downloadUrl.addOnSuccessListener { uri ->
@@ -150,5 +151,27 @@ class create_pet : Fragment() {
             }
     }
 
+    private fun savePetToDatabase(petId: String, petData: Map<String, Any>, petImageUrl: String?) {
+        val petWithImage = petData.toMutableMap()
+        petImageUrl?.let {
+            petWithImage["imageUrl"] = it
+        }
 
+        database.child("users").child(auth.currentUser!!.uid).child("pets").child(petId).setValue(petWithImage)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(context, "Pet added successfully", Toast.LENGTH_SHORT).show()
+                    navigateBackToPetsFragment()
+                } else {
+                    Toast.makeText(context, "Failed to add pet: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+    }
+
+    private fun navigateBackToPetsFragment() {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, pets())
+            .addToBackStack(null)
+            .commit()
+    }
 }

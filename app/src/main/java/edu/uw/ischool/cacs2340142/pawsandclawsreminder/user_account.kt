@@ -45,7 +45,7 @@ class user_account : Fragment() {
         bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.pets -> {
-                    navigateToFragment(Pets())
+                    navigateToFragment(pets())
                     true
                 }
                 R.id.task -> {
