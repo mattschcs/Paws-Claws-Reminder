@@ -19,6 +19,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.time.LocalDateTime
+import java.util.Locale
 
 class AddTask : Fragment() {
 
@@ -75,25 +77,58 @@ class AddTask : Fragment() {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) // Optional: For dropdown style
             repeatsSpinner.adapter = adapter
         }
+        var startDate = java.text.SimpleDateFormat("yyyy-MM-dd").format(startCalendar.date)
+        var endDate = java.text.SimpleDateFormat("yyyy-MM-dd").format(endCalendar.date)
+
+        startCalendar.setOnDateChangeListener(CalendarView.OnDateChangeListener { _, year, month, day ->
+            startDate = String.format("%04d-%02d-%02d", year, month + 1, day)
+        })
+        endCalendar.setOnDateChangeListener(CalendarView.OnDateChangeListener { _, year, month, day ->
+            endDate = String.format("%04d-%02d-%02d", year, month + 1, day)
+        })
+
+        val dateFormat = java.text.SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
         finishTaskButton.setOnClickListener{
             val taskNameInput = taskName.text.toString()
             val typeSpinnerInput = typeSpinner.selectedItem.toString()
             val detailsInput = details.text.toString()
-            val startDate = startCalendar.date.toString()
+
             val timeInput = time.text.toString()
             val repeatsSpinnerInput = repeatsSpinner.selectedItem.toString()
-            val endDate = endCalendar.date.toString()
 
             val user = FirebaseAuth.getInstance().currentUser
             val userId = user?.uid
             val taskId = database.child("tasks").push().key
+            val createdDate = LocalDateTime.now().toString()
 
-            if (userId != null) {
-                if (taskId != null) {
-                    saveTaskToDatabase(taskId, userId, selectedNamesList, taskNameInput, typeSpinnerInput, detailsInput, startDate,
-                        timeInput, repeatsSpinnerInput, endDate, false)
+
+            val startDateObj = dateFormat.parse(startDate)
+            val endDateObj = dateFormat.parse(endDate)
+
+            if(startDateObj <= endDateObj){
+                if (userId != null) {
+                    if (taskId != null) {
+                        saveTaskToDatabase(
+                            taskId,
+                            userId,
+                            selectedNamesList,
+                            taskNameInput,
+                            typeSpinnerInput,
+                            detailsInput,
+                            startDate,
+                            timeInput,
+                            repeatsSpinnerInput,
+                            endDate,
+                            false,
+                            createdDate
+                        )
+                    }
                 }
+
+            } else{
+                //make toast
+                Toast.makeText(requireContext(), "End date can not be before start date", Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -153,7 +188,6 @@ class AddTask : Fragment() {
         }
     }
 
-
     private fun saveTaskToDatabase(
         taskId: String,
         userId: String,
@@ -165,7 +199,8 @@ class AddTask : Fragment() {
         time: String,
         repeats: String,
         endDate: String,
-        checked: Boolean
+        checked: Boolean,
+        lastChecked: String
     ) {
         val taskList = mapOf(
             "taskId" to taskId,
@@ -178,7 +213,8 @@ class AddTask : Fragment() {
             "time" to time,
             "repeats" to repeats,
             "endDate" to endDate,
-            "checked" to checked
+            "checked" to checked,
+            "lastChecked" to lastChecked
         )
 
         database.child("tasks").child(userId).child(taskId).setValue(taskList).addOnCompleteListener { task ->

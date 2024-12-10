@@ -85,5 +85,6 @@ data class TaskData(
     val time: String = "",
     val repeats: String = "",
     val endDate: String = "",
-    var checked: Boolean = false
+    var checked: Boolean = false,
+    var lastChecked: String = ""
 )
