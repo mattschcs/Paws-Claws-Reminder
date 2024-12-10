@@ -77,7 +77,7 @@ class Task : Fragment() {
         }
 
         addTaskButton.setOnClickListener{
-            parentFragmentManager.beginTransaction().replace(R.id.main, AddTask()).addToBackStack(null).commit()
+            parentFragmentManager.beginTransaction().replace(R.id.fragment_container, AddTask()).addToBackStack(null).commit()
         }
 
     }

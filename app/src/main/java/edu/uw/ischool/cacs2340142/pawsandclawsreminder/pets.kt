@@ -21,6 +21,37 @@ class pets : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var petContainer: LinearLayout
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val bottomNavigationView = view.findViewById<BottomNavigationView>(R.id.bottomNavigationViewPet)
+        val navBar = activity?.findViewById<BottomNavigationView>(R.id.bottomNavigationViewPet)
+        navBar?.selectedItemId = R.id.pets
+
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.pets -> {
+                    true
+                }
+                R.id.task -> {
+                    navigateToFragment(Task())
+                    true
+                }
+                R.id.reminders -> {
+                    navigateToFragment(Reminders())
+                    true
+                }
+                R.id.profile -> {
+                    navigateToFragment(user_account())
+                    true
+                }
+                else -> false
+            }
+        }
+
+    }
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
