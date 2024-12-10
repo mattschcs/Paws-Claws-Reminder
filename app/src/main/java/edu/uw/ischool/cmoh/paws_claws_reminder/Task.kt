@@ -60,22 +60,6 @@ class Task : Fragment() {
                 Log.e("Firebase", "Failed to load tasks", error.toException())
             }
         })
-
-        taskListView.setOnItemClickListener { _, view, position, _ ->
-            val selectedTask = tasksList[position]
-            val checkbox: CheckBox = view.findViewById(R.id.itemCheckbox)
-
-            checkbox.setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked) {
-                    // Task is checked, update the task's "checked" field to true
-                    userTasksRef?.child(selectedTask.taskId)?.child("checked")?.setValue(true)
-                } else {
-                    // Task is unchecked, update the task's "checked" field to false
-                    userTasksRef?.child(selectedTask.taskId)?.child("checked")?.setValue(false)
-                }
-            }
-        }
-
         addTaskButton.setOnClickListener{
             parentFragmentManager.beginTransaction().replace(R.id.main, AddTask()).commit()
         }
@@ -100,5 +84,6 @@ data class TaskData(
     val startDate: String = "",
     val time: String = "",
     val repeats: String = "",
-    val endDate: String = ""
+    val endDate: String = "",
+    var checked: Boolean = false
 )
