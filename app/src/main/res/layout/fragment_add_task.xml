@@ -16,12 +16,12 @@
                 android:padding="20dp"
                 android:layout_marginTop="60dp">
 
-                <!--Check boxes for the pet it is assigned to-->
-                <CheckBox
-                    android:id="@+id/checkBox4"
+                <!--Linear layout for Check boxes for the pet it is assigned to-->
+                <LinearLayout
+                    android:id="@+id/pets_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Pet name" />
+                    android:orientation="vertical" />
 
                 <!--Task Name: text Input-->
                 <EditText

@@ -1,6 +1,7 @@
 package edu.uw.ischool.cmoh.paws_claws_reminder
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,15 +11,22 @@ import android.widget.Button
 import android.widget.CalendarView
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class AddTask : Fragment() {
 
     private lateinit var auth: FirebaseAuth
     private val database = FirebaseDatabase.getInstance().reference
+    private val petsDatabase = FirebaseDatabase.getInstance().getReference("pets")
+    private val yourPetNames = ArrayList<String>()
+    private val selectedNamesList = ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,10 +43,13 @@ class AddTask : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        auth = FirebaseAuth.getInstance()
-        val namesList = ArrayList<String>()
+        loadPetNamesFromDatabase()
+        val petContainer: LinearLayout = view.findViewById(R.id.pets_container)
+        addPetCheckboxes(petContainer)
 
-        val petName: CheckBox = view.findViewById(R.id.checkBox4)
+        auth = FirebaseAuth.getInstance()
+
+
         val taskName: EditText = view.findViewById(R.id.task_name)
         val typeSpinner: Spinner =  view.findViewById(R.id.task_type_spinner)
         val details: EditText = view.findViewById(R.id.additional_details)
@@ -65,14 +76,6 @@ class AddTask : Fragment() {
             repeatsSpinner.adapter = adapter
         }
 
-        petName.setOnClickListener{
-            if (petName.isChecked){
-                namesList.add(petName.text.toString())
-            } else {
-                namesList.remove(petName.text.toString())
-            }
-        }
-
         finishTaskButton.setOnClickListener{
             val taskNameInput = taskName.text.toString()
             val typeSpinnerInput = typeSpinner.selectedItem.toString()
@@ -88,12 +91,68 @@ class AddTask : Fragment() {
 
             if (userId != null) {
                 if (taskId != null) {
-                    saveTaskToDatabase(taskId, userId, namesList, taskNameInput, typeSpinnerInput, detailsInput, startDate,
+                    saveTaskToDatabase(taskId, userId, selectedNamesList, taskNameInput, typeSpinnerInput, detailsInput, startDate,
                         timeInput, repeatsSpinnerInput, endDate, false)
                 }
             }
         }
     }
+
+    private fun loadPetNamesFromDatabase(){
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+        petsDatabase.child(userId).addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                yourPetNames.clear()
+                for (petSnapshot in snapshot.children) {
+                    val pet = petSnapshot.getValue(PetModel::class.java)
+                    val petId = petSnapshot.key ?: ""
+
+                    if (pet != null) {
+                        yourPetNames.add(pet.name) // Assuming PetModel has a "name" property
+                        Log.d("PetLoaded", "Loaded pet: ${pet.name} with ID: $petId")
+                    } else {
+                        Log.e("DatabaseError", "Failed to parse pet data: ${petSnapshot.value}")
+                    }
+                }
+                // Find the container and populate checkboxes
+                val petsContainer = view?.findViewById<LinearLayout>(R.id.pets_container)
+                petsContainer?.let { addPetCheckboxes(it) }
+            }
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("DatabaseError", "Failed to load pets: ${error.message}")
+            }
+        })
+    }
+
+    private fun addPetCheckboxes(container: LinearLayout) {
+        // Clear existing checkboxes if necessary
+        container.removeAllViews()
+
+        for (petName in yourPetNames) {
+            val checkBox = CheckBox(requireContext()).apply {
+                text = petName
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+            }
+
+            // Update selectedPetNames based on checkbox state
+            checkBox.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    selectedNamesList.add(petName)
+                    Log.d("PetSelection", "$petName added to selected list")
+                } else {
+                    selectedNamesList.remove(petName)
+                    Log.d("PetSelection", "$petName removed from selected list")
+                }
+            }
+
+            // Add the checkbox to the container
+            container.addView(checkBox)
+        }
+    }
+
 
     private fun saveTaskToDatabase(
         taskId: String,
