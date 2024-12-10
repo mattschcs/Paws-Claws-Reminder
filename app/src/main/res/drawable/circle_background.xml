@@ -1,0 +1,5 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#CA8649" /> <!-- 圆形背景颜色 -->
+    <corners android:radius="80dp" /><!-- 确保完全圆形 -->
+
+</shape>

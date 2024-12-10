@@ -2,20 +2,37 @@ package edu.uw.ischool.cacs2340142.pawsandclawsreminder
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.*
 import androidx.appcompat.widget.Toolbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import java.util.Calendar
-
+import android.net.*
+import androidx.activity.result.contract.ActivityResultContracts
+import de.hdodenhof.circleimageview.CircleImageView
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 
 class create_account : Fragment() {
 
     private lateinit var auth: FirebaseAuth
     private val database = FirebaseDatabase.getInstance().reference
+
+    private lateinit var profileImageView: CircleImageView
+    private var selectedImageUri: Uri? = null
+    private val storageReference: StorageReference = FirebaseStorage.getInstance().reference
+
+    private val selectImageLauncher = registerForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            selectedImageUri = uri
+            profileImageView.setImageURI(uri)
+        } else {
+            Toast.makeText(context, "No image selected", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,8 +52,15 @@ class create_account : Fragment() {
         val password: EditText = view.findViewById(R.id.password)
         val confirmPassword: EditText = view.findViewById(R.id.confirmPassword)
 
+        profileImageView = view.findViewById(R.id.profile_image)
+        val addPictureButton : ImageButton = view.findViewById(R.id.add_picture_button)
+
         val createButton: Button = view.findViewById(R.id.createButton)
         setupDatePicker(dateOfBirth)
+
+        addPictureButton.setOnClickListener {
+            selectImageLauncher.launch("image/*")
+        }
 
         createButton.setOnClickListener {
             val firstNameInput = firstName.text.toString()
@@ -108,7 +132,7 @@ class create_account : Fragment() {
             if (task.isSuccessful) {
                 val userId = auth.currentUser?.uid
                 if (userId != null) {
-                    saveUserDataToDatabase(userId, firstName, lastName, dateOfBirth, phoneNumber, email)
+                    uploadImageToStorage(userId, firstName, lastName, dateOfBirth, phoneNumber, email)
                 } else {
                     Toast.makeText(context, "User ID is null", Toast.LENGTH_SHORT).show()
                 }
@@ -125,7 +149,8 @@ class create_account : Fragment() {
         lastName: String,
         dateOfBirth: String,
         phoneNumber: String,
-        email: String
+        email: String,
+        profileImageUrl: String?
     ) {
         val userAccount = mapOf(
             "firstName" to firstName,
@@ -133,6 +158,7 @@ class create_account : Fragment() {
             "dateOfBirth" to dateOfBirth,
             "phoneNumber" to phoneNumber,
             "email" to email,
+            "profileImage" to profileImageUrl, // Nullable URL
             "mainUser" to true
         )
 
@@ -147,6 +173,31 @@ class create_account : Fragment() {
                 Toast.makeText(context, "Failed to save user data: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun uploadImageToStorage(
+        userId: String,
+        firstName: String,
+        lastName: String,
+        dateOfBirth: String,
+        phoneNumber: String,
+        email: String
+    ) {
+        if (selectedImageUri == null) {
+            saveUserDataToDatabase(userId, firstName, lastName, dateOfBirth, phoneNumber, email, null)
+            return
+        }
+
+        val imageRef = storageReference.child("profile_images/$userId.jpg")
+        imageRef.putFile(selectedImageUri!!)
+            .addOnSuccessListener {
+                imageRef.downloadUrl.addOnSuccessListener { uri ->
+                    saveUserDataToDatabase(userId, firstName, lastName, dateOfBirth, phoneNumber, email, uri.toString())
+                }
+            }
+            .addOnFailureListener {
+                Toast.makeText(context, "Failed to upload image", Toast.LENGTH_SHORT).show()
+            }
     }
 }
 

@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        app:layout_constraintTop_toBottomOf="@id/createAccountHeader"
+        app:layout_constraintTop_toBottomOf="@id/userAccountHeader"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="28dp"
@@ -35,7 +35,7 @@
                 android:layout_width="124dp"
                 android:layout_height="124dp"
                 android:layout_marginTop="84dp"
-                android:src="@drawable/profile_icon"
+                android:src="@drawable/profile_icon_temp"
                 app:civ_border_color="#CA8649"
                 app:civ_border_width="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -85,6 +85,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.16"
                 app:layout_constraintStart_toStartOf="parent"
+                android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@+id/user_age" />
 
             <TextView
@@ -99,9 +100,23 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/user_email" />
 
+            <Button
+                android:id="@+id/switchUserButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:backgroundTint="#B64931"
+                android:text="Switch User"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/userPhoneNumber" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

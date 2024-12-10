@@ -1,5 +1,81 @@
 <resources>
     <string name="app_name">PawsAndClawsReminder</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="pets">Pets</string>
+    <string name="task">Task</string>
+    <string name="reminders">Reminders</string>
+    <string name="profile">Profile</string>
+
+    <!-- Task Types -->
+    <string-array name="TaskType">
+        <item>Cleaning</item>
+        <item>Exercise</item>
+        <item>Feed</item>
+        <item>Groom</item>
+        <item>Medicine</item>
+        <item>Play</item>
+        <item>Training</item>
+        <item>Walk</item>
+        <item>Vet</item>
+        <item>Other</item>
+    </string-array>
+
+    <!-- Task Repeats -->
+    <string-array name="TaskRepeats">
+        <item>Daily</item>
+        <item>Weekly</item>
+        <item>Monthly</item>
+        <item>Yearly</item>
+        <item>Never</item>
+    </string-array>
+
+    <!-- Pet Profile Strings -->
+    <string name="pet_profiles">Pet Profiles</string>
+    <string name="Create_pet_profiles">Create Pet Profiles</string>
+    <string name="add_pet_button_description">Add a new pet</string>
+
+    <!-- Pet Descriptions -->
+    <string name="bella_description">Photo of Bella</string>
+    <string name="milo_description">Photo of Milo</string>
+    <string name="create_pet_button_description">Create a new pet profile</string>
+
+    <!-- Pet Names -->
+    <string name="bella_name">Bella</string>
+    <string name="milo_name">Milo</string>
+    <string name="create_name">Create</string>
+
+    <!-- Create Pet Profile Activity -->
+    <string name="create_pet_profile">Create Pet Profile</string>
+    <string name="upload_photo">Upload photo</string>
+    <string name="pet_name_hint">Pet\'s Name</string>
+
+    <!-- Default Prompt for Spinner -->
+    <string name="choose_pet_type">Choose your pet type</string>
+    <string name="pet_type_sample">Dog</string>
+    <string name="pet_age_sample">2 Years old</string>
+
+    <!-- Pet Types -->
+    <string-array name="pet_types">
+        <item>Dog</item>
+        <item>Cat</item>
+        <item>Rabbit</item>
+        <item>Bird</item>
+        <item>Fish</item>
+        <item>Turtle</item>
+        <item>Hamster</item>
+        <item>Other</item>
+    </string-array>
+
+    <string name="pet_birth_date_hint">Date of Birth (mm/dd/yyyy)</string>
+    <string name="create_button_text">Create</string>
+    <string name="create_pet">Create</string>
+    <string name="no_pets">No pets found. Add a new pet!</string>
+
+
+    <!-- Pet Detail Activity -->
+    <string name="pet_detail_header">Pet Detail</string>
+    <string name="default_pet_name">Pet Name</string>
+    <string name="pet_image_description">Image of the pet</string>
+
+    <!-- Pet Profiles Grid -->
+    <string name="scrollable_content">Pet profiles grid</string>
 </resources>

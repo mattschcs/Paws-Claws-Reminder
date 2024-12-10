@@ -25,7 +25,7 @@
             android:layout_width="96dp"
             android:layout_height="96dp"
             android:layout_marginTop="104dp"
-            android:src="@drawable/profile_icon"
+            android:src="@drawable/profile_icon_black"
             app:civ_border_color="#CA8649"
             app:civ_border_width="4dp"
             app:layout_constraintEnd_toEndOf="parent"
