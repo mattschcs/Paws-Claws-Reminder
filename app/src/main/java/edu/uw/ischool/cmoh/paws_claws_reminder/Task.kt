@@ -93,7 +93,7 @@ class Task : Fragment() {
 data class TaskData(
     val taskId: String = "",
     val userId: String = "",
-    val petName: Any? = null,
+    val petName: ArrayList<String> = arrayListOf(),
     val taskName: String = "",
     val type: String = "",
     val details: String = "",

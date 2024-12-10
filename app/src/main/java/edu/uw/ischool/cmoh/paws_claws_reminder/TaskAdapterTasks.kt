@@ -1,15 +1,11 @@
 package edu.uw.ischool.cmoh.paws_claws_reminder
 
 import android.content.Context
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.CheckBox
 import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
 import java.time.LocalDateTime
 
 class TaskAdapterTasks(private val context: Context, private val tasks: List<TaskData>) : ArrayAdapter<TaskData>(context, 0, tasks) {
@@ -19,8 +15,8 @@ class TaskAdapterTasks(private val context: Context, private val tasks: List<Tas
 
         val taskNameTextView = view.findViewById<TextView>(R.id.task_name)
         val taskDetailsTextView = view.findViewById<TextView>(R.id.task_details)
-
-        val taskHeader = "${task?.petName}: ${task?.taskName}"
+        var petNames = task?.petName?.joinToString(", ")
+        val taskHeader = "${petNames}: ${task?.taskName}"
         val taskDetails = "${task?.type} \nDetails: ${task?.details} \nTime: ${task?.time} \nStart Date: ${task?.startDate}" +
                 "\nRepeats: ${task?.repeats} \nEnd Date:${task?.endDate} "
 
