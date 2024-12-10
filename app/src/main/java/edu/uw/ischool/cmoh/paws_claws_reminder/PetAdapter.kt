@@ -14,6 +14,7 @@ class PetAdapter(private var tasks: List<TaskModel>) :
     class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val taskName: TextView = itemView.findViewById(R.id.tv_task_name)
         val taskDetails: TextView = itemView.findViewById(R.id.tv_task_details)
+        val imgStatus: ImageView = itemView.findViewById(R.id.img_status)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
@@ -26,6 +27,13 @@ class PetAdapter(private var tasks: List<TaskModel>) :
         Log.d("PetAdapter", "Binding task: $task")
         holder.taskName.text = task.taskName
         holder.taskDetails.text = task.details
+
+        // 动态设置状态图片
+        if (task.checked) {
+            holder.imgStatus.setImageResource(R.drawable.ic_check)
+        } else {
+            holder.imgStatus.setImageResource(R.drawable.ic_cross)
+        }
     }
 
     override fun getItemCount(): Int = tasks.size

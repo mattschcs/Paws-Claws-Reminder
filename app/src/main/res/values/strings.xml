@@ -78,7 +78,8 @@
     <string name="pet_image_description">Image of the pet</string>
     <string name="task_status">Task Status</string>
     <string name="task_name">Task Name</string>
-
+    <string name="task_Detail">Task Detail</string>
+    <string name="task_status_icon">if finished is a mark, if unfinished is a cross</string>
 
     <!-- Pet Profiles Grid -->
     <string name="scrollable_content">Pet profiles grid</string>

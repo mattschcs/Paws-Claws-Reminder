@@ -6,58 +6,69 @@
     android:orientation="vertical"
     android:background="#FFFFFF">
 
-    <!-- Pet Image and Name Container -->
-    <LinearLayout
+    <!-- Use NestedScrollView instead of ScrollView -->
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="344dp"
-        android:layout_marginTop="16dp"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <!-- Pet Image -->
-        <ImageView
-            android:id="@+id/img_pet"
-            android:layout_width="130dp"
-            android:layout_height="139dp"
-            android:layout_marginTop="90dp"
-            android:background="@drawable/circle_background"
-            android:clipToOutline="true"
-            android:contentDescription="@string/pet_image_description"
-            android:scaleType="centerCrop" />
-
-        <!-- Pet Name -->
-        <TextView
-            android:id="@+id/tv_pet_name"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:orientation="vertical">
 
-        <!-- Pet Type -->
-        <TextView
-            android:id="@+id/tv_pet_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textSize="16sp" />
+            <!-- Pet Image and Name Container -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
 
-        <!-- Pet Age -->
-        <TextView
-            android:id="@+id/tv_pet_age"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textSize="16sp" />
-    </LinearLayout>
+                <!-- Pet Image -->
+                <ImageView
+                    android:id="@+id/img_pet"
+                    android:layout_width="130dp"
+                    android:layout_height="139dp"
+                    android:layout_marginTop="90dp"
+                    android:background="@drawable/circle_background"
+                    android:clipToOutline="true"
+                    android:contentDescription="@string/pet_image_description"
+                    android:scaleType="centerCrop" />
 
-    <!-- Task List -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_task_list"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="16dp"
-        android:layout_marginTop="90dp"
-        android:layout_weight="1"
-        android:background="#F5F5F5" />
+                <!-- Pet Name -->
+                <TextView
+                    android:id="@+id/tv_pet_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <!-- Pet Type -->
+                <TextView
+                    android:id="@+id/tv_pet_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textSize="16sp" />
+
+                <!-- Pet Age -->
+                <TextView
+                    android:id="@+id/tv_pet_age"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <!-- Task List -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_task_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:background="#F5F5F5" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>
