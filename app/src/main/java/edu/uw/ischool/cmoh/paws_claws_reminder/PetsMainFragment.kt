@@ -58,9 +58,8 @@ class PetsMainFragment : Fragment() {
 
                 for (petSnapshot in snapshot.children) {
                     val pet = petSnapshot.getValue(PetModel::class.java)
-                    val petId = petSnapshot.key ?: ""
                     if (pet != null) {
-                        addPetToGrid(pet, petId)
+                        addPetToGrid(pet, pet.petName)
                     } else {
                         Log.e(tag, "Failed to parse pet data: ${petSnapshot.value}")
                     }
@@ -76,7 +75,7 @@ class PetsMainFragment : Fragment() {
         })
     }
 
-    private fun addPetToGrid(pet: PetModel, petId: String) {
+    private fun addPetToGrid(pet: PetModel, petName: String) {
         val petContainer = LinearLayout(requireContext()).apply {
             orientation = LinearLayout.VERTICAL
             gravity = Gravity.CENTER
@@ -88,7 +87,7 @@ class PetsMainFragment : Fragment() {
                 setMargins(16)
             }
             setOnClickListener {
-                navigateToPetDetail(petId)
+                navigateToPetDetail(petName)
             }
         }
 
@@ -104,25 +103,25 @@ class PetsMainFragment : Fragment() {
             isClickable = false // Disable clicks on the button itself to ensure the container handles the click
         }
 
-        val petName = TextView(requireContext()).apply {
+        val petNameText = TextView(requireContext()).apply {
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
-            text = pet.name
+            text = petName
             textSize = 14f
             gravity = Gravity.CENTER
             setTextColor(Color.BLACK)
         }
 
         petContainer.addView(petImage)
-        petContainer.addView(petName)
+        petContainer.addView(petNameText)
         petGrid.addView(petContainer)
     }
 
-    private fun navigateToPetDetail(petId: String) {
+    private fun navigateToPetDetail(petName: String) {
         val bundle = Bundle().apply {
-            putString("petId", petId)
+            putString("petName", petName)
             putString("userId", userId)
         }
         parentFragmentManager.beginTransaction()
@@ -130,6 +129,7 @@ class PetsMainFragment : Fragment() {
             .addToBackStack(null)
             .commit()
     }
+
 
     private fun addCreateButton() {
         val createButton = ImageButton(requireContext()).apply {

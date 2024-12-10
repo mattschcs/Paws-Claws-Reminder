@@ -108,8 +108,8 @@ class AddTask : Fragment() {
                     val petId = petSnapshot.key ?: ""
 
                     if (pet != null) {
-                        yourPetNames.add(pet.name) // Assuming PetModel has a "name" property
-                        Log.d("PetLoaded", "Loaded pet: ${pet.name} with ID: $petId")
+                        yourPetNames.add(pet.petName) // Assuming PetModel has a "name" property
+                        Log.d("PetLoaded", "Loaded pet: ${pet.petName} with ID: $petId")
                     } else {
                         Log.e("DatabaseError", "Failed to parse pet data: ${petSnapshot.value}")
                     }

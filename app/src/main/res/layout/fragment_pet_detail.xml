@@ -6,50 +6,33 @@
     android:orientation="vertical"
     android:background="#FFFFFF">
 
-    <!-- Header -->
-    <TextView
-        android:id="@+id/header"
-        android:layout_width="match_parent"
-        android:layout_height="92dp"
-        android:background="#B64931"
-        android:gravity="bottom|start"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="8dp"
-        android:text="@string/pet_detail_header"
-        android:textColor="#FFFFFF"
-        android:textSize="23sp"
-        android:textStyle="bold" />
-
     <!-- Pet Image and Name Container -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="239dp"
+        android:layout_height="344dp"
         android:layout_marginTop="16dp"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
         <!-- Pet Image -->
         <ImageView
-            android:id="@+id/img_bella"
+            android:id="@+id/img_pet"
             android:layout_width="130dp"
-            android:layout_height="130dp"
+            android:layout_height="139dp"
+            android:layout_marginTop="90dp"
             android:background="@drawable/circle_background"
             android:clipToOutline="true"
-            android:contentDescription="@string/bella_description"
-            android:scaleType="centerCrop"
-            android:src="@drawable/bella_image" />
+            android:contentDescription="@string/pet_image_description"
+            android:scaleType="centerCrop" />
 
         <!-- Pet Name -->
         <TextView
-            android:id="@+id/tv_bella"
+            android:id="@+id/tv_pet_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="@string/bella_name"
             android:textSize="18sp"
             android:textStyle="bold" />
-
 
         <!-- Pet Type -->
         <TextView
@@ -57,7 +40,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="@string/pet_type_sample"
             android:textSize="16sp" />
 
         <!-- Pet Age -->
@@ -65,10 +47,8 @@
             android:id="@+id/tv_pet_age"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="@string/pet_age_sample"
+            android:layout_marginTop="10dp"
             android:textSize="16sp" />
-
     </LinearLayout>
 
     <!-- Task List -->
@@ -76,6 +56,8 @@
         android:id="@+id/rv_task_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_margin="16dp"
+        android:layout_marginTop="90dp"
         android:layout_weight="1"
-        android:layout_margin="16dp" />
+        android:background="#F5F5F5" />
 </LinearLayout>

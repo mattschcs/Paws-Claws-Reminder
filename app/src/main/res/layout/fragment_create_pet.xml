@@ -6,26 +6,13 @@
     android:padding="0dp">
 
     <!-- Header -->
-    <TextView
-        android:id="@+id/create_pet_header"
-        android:layout_width="match_parent"
-        android:layout_height="92dp"
-        android:background="#B64931"
-        android:gravity="bottom|start"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="8dp"
-        android:text="@string/create_pet_profile"
-        android:textColor="#FFFFFF"
-        android:textSize="23sp"
-        android:textStyle="bold" />
 
     <ImageView
         android:id="@+id/photo_preview"
         android:layout_width="125dp"
         android:layout_height="113dp"
         android:layout_gravity="center"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="90dp"
         android:layout_marginBottom="16dp"
         android:contentDescription="@string/pet_image_description"
         android:src="@drawable/ic_pet_placeholder" />

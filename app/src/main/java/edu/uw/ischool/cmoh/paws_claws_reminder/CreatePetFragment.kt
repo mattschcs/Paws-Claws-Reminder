@@ -160,7 +160,7 @@ class CreatePetFragment : Fragment() {
 
         if (userId != null && petId != null) {
             val petData = mapOf(
-                "name" to petName,
+                "petName" to petName,
                 "type" to petType,
                 "dob" to petDob,
                 "photoUri" to petPhotoUri,

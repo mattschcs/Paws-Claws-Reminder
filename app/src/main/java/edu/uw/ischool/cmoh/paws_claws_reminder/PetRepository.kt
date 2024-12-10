@@ -67,7 +67,7 @@ object PetRepository {
     fun updatePet(petId: String, pet: PetModel, callback: (Boolean) -> Unit) {
         database.child(petId).setValue(pet)
             .addOnSuccessListener {
-                val index = cache.indexOfFirst { it.name == pet.name }
+                val index = cache.indexOfFirst { it.petName == pet.petName }
                 if (index != -1) {
                     cache[index] = pet // 更新缓存
                 }
@@ -82,7 +82,7 @@ object PetRepository {
     fun deletePet(petId: String, callback: (Boolean) -> Unit) {
         database.child(petId).removeValue()
             .addOnSuccessListener {
-                cache.removeAll { it.name == petId } // 从缓存中移除
+                cache.removeAll { it.petName == petId } // 从缓存中移除
                 callback(true)
             }
             .addOnFailureListener { error ->

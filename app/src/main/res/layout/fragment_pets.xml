@@ -7,18 +7,6 @@
     android:background="#FFFFFF">
 
     <!-- Header -->
-    <TextView
-        android:id="@+id/pet_profiles_header"
-        android:layout_width="match_parent"
-        android:layout_height="92dp"
-        android:background="#B64931"
-        android:gravity="bottom|start"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="8dp"
-        android:text="@string/pet_profiles"
-        android:textColor="#FFFFFF"
-        android:textSize="23sp" />
 
     <!-- Scrollable Grid Layout -->
     <ScrollView
