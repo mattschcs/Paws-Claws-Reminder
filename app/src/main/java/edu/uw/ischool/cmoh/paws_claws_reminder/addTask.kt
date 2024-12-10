@@ -120,7 +120,7 @@ class AddTask : Fragment() {
             "endDate" to endDate
         )
 
-        database.child("tasks").child(taskId).setValue(taskList).addOnCompleteListener { task ->
+        database.child("tasks").child(userId).child(taskId).setValue(taskList).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 Toast.makeText(requireContext(), "Task created successfully", Toast.LENGTH_SHORT).show()
                 parentFragmentManager.beginTransaction()
