@@ -89,7 +89,7 @@ class AddTask : Fragment() {
             if (userId != null) {
                 if (taskId != null) {
                     saveTaskToDatabase(taskId, userId, namesList, taskNameInput, typeSpinnerInput, detailsInput, startDate,
-                        timeInput, repeatsSpinnerInput, endDate)
+                        timeInput, repeatsSpinnerInput, endDate, false)
                 }
             }
         }
@@ -105,7 +105,8 @@ class AddTask : Fragment() {
         startDate: String,
         time: String,
         repeats: String,
-        endDate: String
+        endDate: String,
+        checked: Boolean
     ) {
         val taskList = mapOf(
             "taskId" to taskId,
@@ -117,7 +118,8 @@ class AddTask : Fragment() {
             "startDate" to startDate,
             "time" to time,
             "repeats" to repeats,
-            "endDate" to endDate
+            "endDate" to endDate,
+            "checked" to checked
         )
 
         database.child("tasks").child(userId).child(taskId).setValue(taskList).addOnCompleteListener { task ->
