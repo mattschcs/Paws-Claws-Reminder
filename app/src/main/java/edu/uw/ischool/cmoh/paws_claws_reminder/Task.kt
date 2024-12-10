@@ -28,7 +28,7 @@ class Task : Fragment() {
         val addTaskButton: Button = view.findViewById(R.id.add_task)
 
         addTaskButton.setOnClickListener{
-            parentFragmentManager.beginTransaction().replace(R.id.main, addTask()).commit()
+            parentFragmentManager.beginTransaction().replace(R.id.main, AddTask()).commit()
         }
 
     }
