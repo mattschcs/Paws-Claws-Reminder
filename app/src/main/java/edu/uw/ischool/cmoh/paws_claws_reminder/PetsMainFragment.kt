@@ -64,6 +64,7 @@ class PetsMainFragment : Fragment() {
 
 
     private fun addPetToGrid(pet: PetModel, petId: String) {
+        // Create the ImageButton for the pet's image
         val petImage = ImageButton(requireContext()).apply {
             layoutParams = LinearLayout.LayoutParams(200, 200).apply { setMargins(8) }
             setBackgroundResource(R.drawable.circle_background)
@@ -73,8 +74,11 @@ class PetsMainFragment : Fragment() {
             } else {
                 setImageResource(R.drawable.ic_pet_placeholder)
             }
+            isClickable = false // Disable the default clickability of ImageButton
+            isFocusable = false // Ensure the ImageButton does not take focus
         }
 
+        // Create the TextView for the pet's name
         val petName = TextView(requireContext()).apply {
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -86,6 +90,7 @@ class PetsMainFragment : Fragment() {
             setTextColor(Color.BLACK)
         }
 
+        // Combine the image and name into a single clickable container
         val petContainer = LinearLayout(requireContext()).apply {
             orientation = LinearLayout.VERTICAL
             gravity = Gravity.CENTER
@@ -98,20 +103,24 @@ class PetsMainFragment : Fragment() {
             }
             addView(petImage)
             addView(petName)
-        }
 
-        petContainer.setOnClickListener {
-            val bundle = Bundle().apply {
-                putString("petId", petId)
+            // Set the click listener for the entire container
+            setOnClickListener {
+                val bundle = Bundle().apply {
+                    putString("petId", petId) // Pass the pet ID to the detail page
+                }
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.main, PetDetailFragment().apply { arguments = bundle })
+                    .addToBackStack(null)
+                    .commit()
             }
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.main, PetDetailFragment().apply { arguments = bundle })
-                .addToBackStack(null)
-                .commit()
         }
 
+        // Add the container to the grid
         petGrid.addView(petContainer)
     }
+
+
 
     private fun addCreateButton() {
         val createButton = ImageButton(requireContext()).apply {
