@@ -44,20 +44,29 @@ class MainActivity : AppCompatActivity() {
                 insets
             }
         }
-
-        if(auth.currentUser != null){
-            bottomNavBar.visibility = View.VISIBLE // Show the navbar
-
-        }
     }
     private fun startFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.main, fragment)
             .commit()
+        updateNavBarVisibility(fragment)
     }
     private fun replaceFragment(fragment: Fragment){
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.main, fragment)
         fragmentTransaction.commit()
+        updateNavBarVisibility(fragment)
+    }
+
+    fun updateNavBarVisibility(fragment: Fragment) {
+        // Check the type of fragment and hide/show the navBar
+        when (fragment) {
+            is LogIn, is create_account -> {
+                bottomNavBar.visibility = View.GONE // Hide navBar for login and create user
+            }
+            else -> {
+                bottomNavBar.visibility = View.VISIBLE // Show navBar for other fragments
+            }
+        }
     }
 }

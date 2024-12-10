@@ -46,6 +46,8 @@ class LogIn : Fragment() {
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener{ task ->
             if(task.isSuccessful){
                 parentFragmentManager.beginTransaction().replace(R.id.main, PetsMainFragment()).commit()
+                //after login show the navbar
+                (activity as? MainActivity)?.updateNavBarVisibility(PetsMainFragment())
             } else {
                 Toast.makeText(context, "Login failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
             }
