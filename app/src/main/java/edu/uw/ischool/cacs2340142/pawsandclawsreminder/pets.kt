@@ -1,6 +1,5 @@
 package edu.uw.ischool.cacs2340142.pawsandclawsreminder
 
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,21 +8,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import kotlinx.coroutines.*
-import com.google.firebase.auth.FirebaseAuth
-import androidx.appcompat.widget.Toolbar
 import com.google.firebase.database.*
-import com.google.firebase.firestore.auth.User
 import de.hdodenhof.circleimageview.CircleImageView
 import java.net.HttpURLConnection
 import java.net.URL
-import java.text.SimpleDateFormat
-import java.util.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
 
 
 class pets : Fragment() {
-    private lateinit var database: DatabaseReference
-    private lateinit var petsContainer: LinearLayout
+    private val database = FirebaseDatabase.getInstance().reference
+    private lateinit var auth: FirebaseAuth
+    private lateinit var petContainer: LinearLayout
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,21 +27,18 @@ class pets : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_pets, container, false)
 
-        // Initialize Firebase Database
-        database = FirebaseDatabase.getInstance().reference.child("users")
+        // Initialize Firebase Auth
+        auth = FirebaseAuth.getInstance()
 
-        // Initialize Views
-        petsContainer = view.findViewById(R.id.dynamic_pets)
+        // Initialize views
+        petContainer = view.findViewById(R.id.pets_container)
         val addPetPicture: CircleImageView = view.findViewById(R.id.add_pet_picture)
 
-        // Set click listener for add_pet_picture
-        addPetPicture.setOnClickListener {
-            navigateToCreatePetFragment()
-        }
+        // Load pet data
+        loadPetData()
 
         // Set up BottomNavigationView
-        val bottomNavigationView: BottomNavigationView? =
-            view.findViewById(R.id.bottomNavigationViewPet)
+        val bottomNavigationView: BottomNavigationView? = view.findViewById(R.id.bottomNavigationViewPet)
         bottomNavigationView?.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.pets -> true
@@ -53,23 +46,25 @@ class pets : Fragment() {
                     navigateToFragment(Task())
                     true
                 }
-
                 R.id.reminders -> {
                     navigateToFragment(Reminders())
                     true
                 }
-
                 R.id.profile -> {
                     navigateToFragment(user_account())
                     true
                 }
-
                 else -> false
             }
         }
 
+        addPetPicture.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, create_pet())
+                .addToBackStack(null)
+                .commit()
+        }
 
-        loadAllPets()
 
         return view
     }
@@ -81,75 +76,81 @@ class pets : Fragment() {
             .commit()
     }
 
-    private fun navigateToCreatePetFragment() {
+    private fun navigateToPetProfile(petId: String) {
+        val fragment = pet_profile()
+        val args = Bundle()
+        args.putString("petId", petId)
+        fragment.arguments = args
+
         parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, create_pet())
+            .replace(R.id.fragment_container, fragment)
             .addToBackStack(null)
             .commit()
     }
 
-    private fun loadAllPets() {
-        database.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                petsContainer.removeAllViews()
-                for (userSnapshot in snapshot.children) {
-                    val petsSnapshot = userSnapshot.child("pets")
-                    if (petsSnapshot.exists()) {
-                        for (petSnapshot in petsSnapshot.children) {
-                            val petName =
-                                petSnapshot.child("name").getValue(String::class.java) ?: "Unknown"
-                            val petImageUrl =
-                                petSnapshot.child("imageUrl").getValue(String::class.java)
-                            addPetToContainer(petName, petImageUrl)
-                        }
+    private fun loadPetData() {
+        val currentUser = auth.currentUser
+        currentUser?.let { user ->
+            val userId = user.uid
+            val petRef = database.child("users").child(userId).child("pets")
+
+            petRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (petSnapshot in snapshot.children) {
+                        val petId = petSnapshot.key ?: continue
+                        val name = petSnapshot.child("name").getValue(String::class.java) ?: "Unknown"
+                        val imageUrl = petSnapshot.child("imageUrl").getValue(String::class.java)
+
+                        addPetView(petId, name, imageUrl)
                     }
                 }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(context, "Failed to load pets: ${error.message}", Toast.LENGTH_SHORT)
-                    .show()
-            }
-        })
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(context, "Failed to load pets: ${error.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
+        }
     }
 
-    private fun addPetToContainer(petName: String, petImageUrl: String?) {
-        val petView = layoutInflater.inflate(R.layout.item_pet, petsContainer, false)
+    private fun addPetView(petId: String, name: String, imageUrl: String?) {
+        val petItemView = LayoutInflater.from(context).inflate(R.layout.item_pet, petContainer, false)
 
-        val petNameTextView = petView.findViewById<TextView>(R.id.pet_name)
-        val petImageView = petView.findViewById<CircleImageView>(R.id.pet_picture)
+        val petNameTextView: TextView = petItemView.findViewById(R.id.pet_name)
+        val petImageView: CircleImageView = petItemView.findViewById(R.id.pet_picture)
 
-        petNameTextView.text = petName
+        petNameTextView.text = name
 
-        if (!petImageUrl.isNullOrEmpty()) {
-            loadPetImage(petImageUrl, petImageView)
+        // Load image using the custom function
+        if (!imageUrl.isNullOrEmpty()) {
+            loadPetImage(imageUrl, petImageView)
         } else {
-            petImageView.setImageResource(R.drawable.pet_icon_temp) // Default placeholder
+            petImageView.setImageResource(R.drawable.ic_pet_placeholder) // Default placeholder image
         }
 
-        petsContainer.addView(petView)
-    }
+        // Set click listener to navigate to pet profile
+        petItemView.setOnClickListener {
+            navigateToPetProfile(petId)
+        }
 
+        petContainer.addView(petItemView)
+    }
 
     private fun loadPetImage(imageUrl: String, imageView: CircleImageView) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val url = URL(imageUrl)
-                val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
+                val url = java.net.URL(imageUrl)
+                val connection = url.openConnection() as java.net.HttpURLConnection
                 connection.doInput = true
                 connection.connect()
 
                 val inputStream = connection.inputStream
-                val bitmap = BitmapFactory.decodeStream(inputStream)
+                val bitmap = android.graphics.BitmapFactory.decodeStream(inputStream)
 
                 withContext(Dispatchers.Main) {
                     imageView.setImageBitmap(bitmap)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                withContext(Dispatchers.Main) {
-                    imageView.setImageResource(R.drawable.pet_icon_temp) // Default placeholder
-                }
             }
         }
     }
