@@ -139,13 +139,14 @@ class Reminders : Fragment() {
                     val taskDetails = taskSnapshot.value as? Map<String, Any>?
                     val taskId = taskDetails?.get("taskId") as String
                     val taskName = taskDetails["taskName"] as String
-                    val endDateMillis = (taskDetails["endDate"] as String).toLongOrNull()
+                    //val endDateMillis = (taskDetails["endDate"] as String).toLongOrNull()
 
-                    val endDateTime = LocalDateTime.ofInstant(endDateMillis?.let {
-                        Instant.ofEpochMilli(
-                            it
-                        )
-                    }, ZoneId.systemDefault())
+                    val endDateMillis = (taskDetails["endDate"] as? String)?.toLongOrNull() ?: 0L
+                    if (endDateMillis == 0L) {
+                        Log.e("ReminderFragment", "Invalid or missing endDateMillis: $taskDetails")
+                        continue
+                    }
+                    val endDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(endDateMillis), ZoneId.systemDefault())
                     Log.i("ReminderFragment", " taskDetailsSnapshot : $taskDetails")
                     val taskToDo = TaskToDo(
                         id = taskId.hashCode(),
