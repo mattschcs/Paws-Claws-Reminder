@@ -66,7 +66,8 @@ class Reminders : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var phoneNumberInput: EditText
     private val selectedTasks = mutableListOf<TaskToDo>()
-    private lateinit var deadlineReminder: EditText
+    //private lateinit var deadlineReminder: EditText
+    private var deadlineReminder: EditText? = null
     private lateinit var reminderIntervalSpinner: Spinner
     private val database = FirebaseDatabase.getInstance().reference
     private lateinit var save_button: Button
@@ -92,7 +93,7 @@ class Reminders : Fragment() {
         save_button = view.findViewById(R.id.save_button)
         recyclerView = view.findViewById(R.id.Task_list)
         phoneNumberInput = view.findViewById(R.id.phone_input)
-        deadlineReminder = view.findViewById(R.id.reminderBeforeDeadline)
+        deadlineReminder = null
         reminderIntervalSpinner = view.findViewById(R.id.reminder_interval_spinner)
         val phoneNumberbeforeclick = phoneNumberInput.text.toString()
         Log.i("ReminderFragment", "phoneNumberbeforeclick: $phoneNumberbeforeclick")
@@ -214,7 +215,7 @@ class Reminders : Fragment() {
             val minuteBeforeDeadline = if (now.isAfter(task.endDateTime)) {
                 null
             } else {
-                deadlineReminder.text.toString().toIntOrNull()
+                deadlineReminder?.text.toString().toIntOrNull()
             }
             Reminder(
                 reminderId = task.id,
@@ -288,7 +289,7 @@ class Reminders : Fragment() {
             timer.schedule(object : TimerTask() {
                 override fun run() {
                     handler.post {
-                        sendSMS(reminder.phoneNumber, "Reminder: ${reminder.reminderName}")
+                        sendSMS(reminder.phoneNumber, "Reminder: ${reminder.reminderName} Repeat: ${reminder.reminderRepeat}")
                     }
                     when (reminder.reminderRepeat) {
                         "Minute" -> handler.postDelayed({ scheduleTask() }, 60 * 1000L)

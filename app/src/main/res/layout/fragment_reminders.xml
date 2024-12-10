@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".Reminders">
 
-    <!-- Header Bar -->
     <LinearLayout
         android:id="@+id/header_bar"
         android:layout_width="match_parent"
@@ -44,23 +43,21 @@
         android:focusable="true"
         android:focusableInTouchMode="true"/>
 
-    <!-- Reminder Before Deadline EditText -->
-    <EditText
-        android:id="@+id/reminderBeforeDeadline"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:autofillHints="minute_before_deadline"
-        android:hint="@string/minute_before_deadline"
-        android:inputType="phone"
-        android:padding="12dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/phone_input"
-        android:focusable="true"
-        android:focusableInTouchMode="true"/>
+<!--    <EditText-->
+<!--        android:id="@+id/reminderBeforeDeadline"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:autofillHints="minute_before_deadline"-->
+<!--        android:hint="@string/minute_before_deadline"-->
+<!--        android:inputType="phone"-->
+<!--        android:padding="12dp"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/phone_input"-->
+<!--        android:focusable="true"-->
+<!--        android:focusableInTouchMode="true"/>-->
 
-    <!-- Reminder Interval Spinner -->
     <Spinner
         android:id="@+id/reminder_interval_spinner"
         android:layout_width="0dp"
@@ -70,9 +67,8 @@
         android:entries="@array/reminder_intervals"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/reminderBeforeDeadline" />
+        app:layout_constraintTop_toBottomOf="@id/phone_input" />
 
-    <!-- Task List RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/Task_list"
         android:layout_width="0dp"
@@ -84,7 +80,6 @@
         app:layout_constraintTop_toBottomOf="@id/reminder_interval_spinner"
         app:layout_constraintVertical_bias="0.0" />
 
-    <!-- Save Button -->
     <Button
         android:id="@+id/save_button"
         android:layout_width="wrap_content"
